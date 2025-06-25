@@ -11,7 +11,7 @@ export default function Navbar() {
         </p>
       </div>
       <nav className="flex gap-4 h-full items-center">
-        <div className="flex gap-4 border-r border-gray-100 pr-4 items-center">
+        <div className="flex gap-4 border-r border-gray-100 pr-4 items-center max-md:hidden">
           <Link href={paths.login} className=" btn !px-2">
             Login
           </Link>
@@ -19,7 +19,7 @@ export default function Navbar() {
             Register
           </Link>
         </div>
-        <Link href={paths.upload} className="btn btn-primary ">
+        <Link href={paths.upload} className="btn btn-primary md:text-sm text-xs truncate ">
           Create Case <LuArrowUpRight />
         </Link>
       </nav>

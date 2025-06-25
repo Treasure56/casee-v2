@@ -22,9 +22,9 @@ export default function Pill({
   return (
     <div 
     style={{background: colors[Math.floor(Math.random() * colors.length)]}}
-    className=" flex items-center justify-center gap-1 text-sm bg-[#fee] px-2 rounded-xl py-1 border border-brand-secondary/10">
+    className=" flex items-center justify-center gap-1 text-sm bg-[#fee] px-2 rounded-xl py-1 border border-brand-secondary/10 mx-1">
       {icon}
-      <p className="text-sm text-neutral-700">{title}</p>
+      <p className="md:text-sm text-xs text-neutral-700 truncate">{title}</p>
     </div>
   );
 }
