@@ -3,11 +3,12 @@ import Image from "next/image";
 
 export type WhiteBgPhoneProps = {
     src:string
+    className?:string
 }
 
-export default function WhiteBgPhone({src}:WhiteBgPhoneProps) {
+export default function WhiteBgPhone({src, className}:WhiteBgPhoneProps) {
     return (
-        <div className="relative aspect-[896/1831] overflow-hidden"
+        <div className={`relative aspect-[896/1831] overflow-hidden ${className}`} 
         style={{
             borderTopRightRadius: "12% 10%",
             borderTopLeftRadius: "12% 10%",
