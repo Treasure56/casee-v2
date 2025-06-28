@@ -33,7 +33,7 @@ export default function Hero() {
             </span>{" "}
             Phone Case
           </h1>
-          <h2 className="text-gray-700 md:text-base text-sm max-w-[700px] text-center ">
+          <h2 className="text-gray-600 md:text-base text-sm max-w-[700px] text-center ">
             Turn your favorite memories into a one-of-a-kind phone case. With
             Casee, you&apos;re not just protecting your phone you&apos;re
             preserving what matters most.

@@ -13,7 +13,7 @@ export default function UploadSection() {
             Your Photo. <br />Your Phone Case.
           </h3>
 
-          <p className=" text-sm md:text-base text-nueutral-600 leading-relaxed">
+          <p className=" text-sm md:text-base  text-neutral-700 leading-relaxed">
             Transform your favorite memories into a stunning, protective phone
             case. Our advanced printing technology ensures vibrant colors and
             lasting quality.
