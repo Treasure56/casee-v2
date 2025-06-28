@@ -9,7 +9,7 @@ export default function Reviews() {
   return (
     <section className="app-container flex flex-col gap-4 justify-center py-12 max-w-[1000px] mx-auto">
         <h2 className="text-center text-3xl md:text-4xl mb-8 font-bold">
-        In High Demand
+        What People Buy
       </h2>
       <div className="relative">
         <div className="grid grid-cols-2 md:grid-cols-3 overflow-clip mt-5">
@@ -34,29 +34,29 @@ const marqueeData = [
   {
     duration: 20000,
     images: [
-      "https://images.pexels.com/photos/18331820/pexels-photo-18331820.jpeg",
-      "https://images.pexels.com/photos/13833164/pexels-photo-13833164.jpeg",
-      "https://images.pexels.com/photos/2100553/pexels-photo-2100553.jpeg",
-      "https://images.pexels.com/photos/18331820/pexels-photo-18331820.jpeg"
+      "/images/case1.jpeg",
+      "/images/case2.jpeg",
+      "/images/case3.jpeg",
+      "/images/case4.jpeg",
     ],
   },
   {
     duration: 25000,
     images: [
-      "https://images.pexels.com/photos/265722/pexels-photo-265722.jpeg",
-      "https://images.pexels.com/photos/3617843/pexels-photo-3617843.jpeg",
-      "https://images.pexels.com/photos/6667766/pexels-photo-6667766.jpeg",
-      "https://images.pexels.com/photos/7944365/pexels-photo-7944365.jpeg"
+      "/images/case5.jpeg",
+      "/images/case6.jpeg",
+      "/images/case7.jpeg",
+      "/images/case8.jpeg",
     ],
   },
   {
     duration: 18000,
     className: "max-md:hidden",
     images: [
-      "https://images.pexels.com/photos/1927219/pexels-photo-1927219.jpeg",
-      "https://images.pexels.com/photos/4099127/pexels-photo-4099127.jpeg",
-      "https://images.pexels.com/photos/58572/pexels-photo-58572.jpeg",
-      "https://images.pexels.com/photos/3365555/pexels-photo-3365555.jpeg"
+      "/images/case9.jpeg",
+      "/images/case10.jpeg",
+      "/images/case11.jpeg",
+      "/images/case12.jpg",
     ],
   },
 ];

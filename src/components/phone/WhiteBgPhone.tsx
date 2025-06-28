@@ -16,7 +16,7 @@ export default function WhiteBgPhone({src, className}:WhiteBgPhoneProps) {
             borderBottomLeftRadius: "14% 10%"
         }}
         >
-             <img className="h-full w-full relative object-cover" src={src} alt="hero-img" width={500} height={1000} />
+             <Image  className="h-full w-full relative object-cover" src={src} alt="hero-img" width={500} height={1000} />
              <Image className="h-full w-full absolute inset-0" src="/images/phone-template-white-edges.png" alt="hero-img" width={500} height={1000} />
         </div>
     );
