@@ -1,7 +1,8 @@
 export default function Upload() {
     return (
         <div>
-            hello from upload page 
+            upload page
+            <p className="text-2xl font-bold">Upload your files</p>
         </div>
     );
 }

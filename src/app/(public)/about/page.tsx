@@ -1,11 +1,11 @@
-import ScrollAnimation from "./ScrollAnimation";
-import Simple from "./Simple";
+import Sample from "./sample";
 
 export default function Page() {
     return (
         <div className="p-20">
-            <Simple />
-            <ScrollAnimation />
+            {/* <Simple />
+            <ScrollAnimation /> */}
+            <Sample />
         </div>
     );
 }
