@@ -1,6 +1,6 @@
 git add .
 echo "added"
-git commit -m "Designed upload page"
+git commit -m "Designing the design configuration page"
 echo "committed"
 git push origin main
 echo "changes pushed successfully"
