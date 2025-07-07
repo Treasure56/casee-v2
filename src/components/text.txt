@@ -1,0 +1,32 @@
+<DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="w-full flex items-center justify-between border border-zinc-200 rounded-md px-3 py-2 bg-white hover:bg-zinc-50 transition">
+                      <span>{selectedModel.label}</span>
+                      <LuChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-full mt-2 rounded-md shadow-lg border border-zinc-200 bg-white">
+                    {models.options.map((model) => (
+                      <DropdownMenuItem
+                        key={model.label}
+                        className={cn(
+                          "flex items-center text-sm gap-2 px-3 py-2 cursor-pointer transition-colors",
+                          model.label === selectedModel.label
+                            ? "bg-zinc-100 font-semibold"
+                            : "hover:bg-zinc-50"
+                        )}
+                        onClick={() => setSelectedModel(model)}
+                      >
+                        <LuCheck
+                          className={cn(
+                            "mr-2 h-4 w-4 text-brand-primary transition-opacity",
+                            model.label === selectedModel.label
+                              ? "opacity-100"
+                              : "opacity-0"
+                          )}
+                        />
+                        {model.label}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>

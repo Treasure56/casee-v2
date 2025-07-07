@@ -129,5 +129,8 @@
  .btn-secondary-border {
     @apply border border-brand-secondary text-brand-secondary hover:bg-brand-secondary/10;
   }
+   .app-input {
+    @apply bg-neutral-100 w-full border border-gray-300 outline-brand-primary text-gray-800 py-2.5 pe-3 rounded-md read-only:opacity-70 read-only:[&not[type="file"]]:pointer-events-none;
+  }
 }
 
