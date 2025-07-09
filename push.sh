@@ -1,6 +1,6 @@
 git add .
 echo "added"
-git commit -m "fix: recent edits to option validators and design features"
+git commit -m "Designed case summary page and implemented confetti effect"
 echo "committed"
 git push origin main
 echo "changes pushed successfully"

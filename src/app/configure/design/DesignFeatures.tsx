@@ -34,7 +34,7 @@ export default function DesignFeatures() {
     (typeof material.options)[number]
   >(material.options[0]);
   const [selectedFinish, setSelectedFinish] = useState<
-    (typeof finishes)[number]
+    (typeof finishes.options)[number]
   >(finishes.options[0]);
 
   return (
