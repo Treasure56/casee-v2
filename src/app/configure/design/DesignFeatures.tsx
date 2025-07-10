@@ -4,7 +4,7 @@ import {
   finishes,
   material,
   models,
-} from "@/app/validators/optionValidators";
+} from "@/validators/optionValidators";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";

@@ -1,4 +1,4 @@
-import { colors } from "@/app/validators/optionValidators";
+import { colors } from "@/validators/optionValidators";
 import Phone from "@/components/phone/Phone";
 import { cn } from "@/lib/utils";
 

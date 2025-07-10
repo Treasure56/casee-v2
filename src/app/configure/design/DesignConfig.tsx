@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import { colors } from "@/app/validators/optionValidators";
+import { colors } from "@/validators/optionValidators";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 import { DesignConfigType } from "@/types/designConfig";
