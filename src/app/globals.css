@@ -132,5 +132,9 @@
    .app-input {
     @apply bg-neutral-100 w-full border border-gray-300 outline-brand-primary text-gray-800 py-2.5 pe-3 rounded-md read-only:opacity-70 read-only:[&not[type="file"]]:pointer-events-none;
   }
+   .phone-skew {
+    @apply [transform:perspective(400px)_rotateY(3deg)_skewX(11.1deg)_skewY(-10.9deg)]
+  }
 }
+
 

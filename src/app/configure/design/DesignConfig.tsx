@@ -9,9 +9,9 @@ import { useState } from "react";
 import { Rnd } from "react-rnd";
 
 export default function DesignConfig({
-  // ImageDimensions,
-  // configId,
-  // imageUrl,
+  ImageDimensions,
+  configId,
+  imageUrl,
 }: DesignConfigType) {
   const [options, setOptions] = useState<{ color: (typeof colors)[number] }>({
     color: colors[0],
@@ -20,8 +20,8 @@ export default function DesignConfig({
   
   // to save the croped image dimensions and position
     const [renderedDimension, setRenderedDimension] = useState({
-    // width: ImageDimensions.width/4,
-    // height: ImageDimensions.height/4
+    width: ImageDimensions.width/4,
+    height: ImageDimensions.height/4
   })
   const [renderedPosition, setRenderedPosition] = useState({
     x: 150,
@@ -53,8 +53,8 @@ export default function DesignConfig({
         default={{
           x: 150,
           y: 205,
-          // height: ImageDimensions.height / 4,
-          // width: ImageDimensions.width / 4,
+          height: ImageDimensions.height / 4,
+          width: ImageDimensions.width / 4,
         }}
         onResizeStop = {(_,__, ref, ___,{x, y}) =>{
           setRenderedDimension({
