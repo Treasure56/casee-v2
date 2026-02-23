@@ -51,7 +51,7 @@ export default function ForgetPasswordForm() {
 
 const formFields: AppInputProps[] = [
   {
-    name: "email",
+    name: "email ",
     type: "email",
     placeholder: "example@gmail.com",
     title: "Email",
