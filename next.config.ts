@@ -1,8 +1,17 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
-   images: {
-    domains: ['images.pexels.com'],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.pexels.com",
+      },
+    ],
+  },
+  turbopack: {
+    root: path.resolve("."),
   },
 };
 

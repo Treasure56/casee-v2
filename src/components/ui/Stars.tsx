@@ -6,7 +6,7 @@ export default function Stars() {
       {[1, 2, 3, 4, 5].map((i) => (
         <Star
           key={i}
-          className="h-4 w-4 text-brand-primary fill-brand-primary"
+          className="h-4 w-4 text-amber-500 fill-amber-500"
         />
       ))}
     </div>

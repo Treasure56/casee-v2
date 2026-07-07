@@ -19,7 +19,7 @@ export default function Navbar() {
             Register
           </Link>
         </div>
-        <Link href={paths.upload} className="btn btn-primary !py-2 md:text-sm text-xs truncate ">
+        <Link href={paths.upload} className="btn btn-primary !px-6 !py-3 md:text-sm text-xs truncate ">
           Create Case <LuArrowUpRight />
         </Link>
       </nav>

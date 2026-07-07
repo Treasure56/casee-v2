@@ -40,7 +40,7 @@ export default function CaseDetails() {
       <h3 className="text-3xl font-bold tracking-tight text-gray-800">
         Your iphone 12 Case
       </h3>
-      <p className="bg-brand-primary/10 rounded-3xl px-3 py-1 inline-flex gap-2 items-center text-brand-primary self-start">
+      <p className="bg-brand-secondary/10 rounded-3xl px-3 py-1 inline-flex gap-2 items-center text-brand-secondary self-start">
         <LucideCheckCircle className="h-5 w-5" />
         Available now and ships immediately
       </p>

@@ -16,7 +16,7 @@ export default function FeaturesCard({ title, features, icon }: FeaturesCardProp
             <div className="flex gap-2 flex-col">
                 {features.map((feature, index) => (
                     <div key={index} className="flex items-center gap-1">
-                        <LuCheck className="h-4 w-4 text-brand-primary" />
+                        <LuCheck className="h-4 w-4 text-brand-secondary" />
                         <span className="text-sm text-gray-700">{feature}</span>
                     </div>
                 ))}

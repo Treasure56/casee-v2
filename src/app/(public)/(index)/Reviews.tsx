@@ -1,7 +1,7 @@
 "use client";
 
 import WhiteBgPhone from "@/components/phone/WhiteBgPhone";
-import Marquee from "react-easy-marquee";
+import Marquee from "@/components/ui/Marquee";
 
 export default function Reviews() {
   return (

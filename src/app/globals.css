@@ -8,8 +8,8 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --color-brand-primary:#96258C;
-  --color-brand-secondary:#152D3D;
+  --color-brand-primary: #000000;
+  --color-brand-secondary: #7C3AED;
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
