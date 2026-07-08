@@ -21,12 +21,12 @@ export default function Step() {
       <div className="grid md:grid-cols-3 md:gap-4 gap-8 flex-1 justify-center md:pl-8">
         {stepContents.map((i) => (
           <div key={i.name} className="flex flex-col text-start">
-            <p className="text-base text-neutral-800 font-medium">{i.name}</p>
-            <p className="text-base text-neutral-500">{i.description}</p>
+            <p className="text-base text-foreground font-medium">{i.name}</p>
+            <p className="text-base text-muted-foreground">{i.description}</p>
           </div>
         ))}
       </div>
-      <div className="md:w-full w-1 max-md:max-w-1.5 md:max-w-full relative rounded-md max-md:flex-1 md:h-1 bg-gray-200 flex-shrink-0 overflow-hidden">
+      <div className="md:w-full w-1 max-md:max-w-1.5 md:max-w-full relative rounded-md max-md:flex-1 md:h-1 bg-secondary flex-shrink-0 overflow-hidden">
         <div
           className="bg-brand-secondary md:min-h-full absolute rounded-md max-md:min-w-full transition-all duration-300 ease-in-out"
           style={{

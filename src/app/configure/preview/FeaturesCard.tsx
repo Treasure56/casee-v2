@@ -8,7 +8,7 @@ export type FeaturesCardProps = {
 }
 export default function FeaturesCard({ title, features, icon }: FeaturesCardProps) {
     return (
-        <div className="border border-gray-200 rounded-md flex flex-col gap-3 p-4 h-full">
+        <div className="border border-border rounded-md flex flex-col gap-3 p-4 h-full">
             <div className="flex items-center gap-2">
                 {icon}
                 <h3 className="text-lg font-semibold">{title}</h3>
@@ -17,7 +17,7 @@ export default function FeaturesCard({ title, features, icon }: FeaturesCardProp
                 {features.map((feature, index) => (
                     <div key={index} className="flex items-center gap-1">
                         <LuCheck className="h-4 w-4 text-brand-secondary" />
-                        <span className="text-sm text-gray-700">{feature}</span>
+                        <span className="text-sm text-muted-foreground">{feature}</span>
                     </div>
                 ))}
             </div>

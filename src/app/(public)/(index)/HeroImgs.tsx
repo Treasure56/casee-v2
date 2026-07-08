@@ -161,7 +161,7 @@ export default function HeroImgs() {
             e.stopPropagation();
             handlePrev();
           }}
-          className="absolute hidden sm:flex left-[-20px] md:left-[-50px] lg:left-[-80px] z-40 w-10 h-10 rounded-full bg-white/90 hover:bg-white border border-zinc-200 shadow-md items-center justify-center text-zinc-700 hover:text-zinc-900 transition-all hover:scale-105 active:scale-95 backdrop-blur-sm cursor-pointer"
+          className="absolute hidden sm:flex left-[-20px] md:left-[-50px] lg:left-[-80px] z-40 w-10 h-10 rounded-full bg-card/90 hover:bg-card border border-border shadow-md items-center justify-center text-muted-foreground hover:text-foreground transition-all hover:scale-105 active:scale-95 backdrop-blur-sm cursor-pointer"
           aria-label="Previous slide"
         >
           <LuChevronLeft className="w-6 h-6" />
@@ -240,7 +240,7 @@ export default function HeroImgs() {
             e.stopPropagation();
             handleNext();
           }}
-          className="absolute hidden sm:flex right-[-20px] md:right-[-50px] lg:right-[-80px] z-40 w-10 h-10 rounded-full bg-white/90 hover:bg-white border border-zinc-200 shadow-md items-center justify-center text-zinc-700 hover:text-zinc-900 transition-all hover:scale-105 active:scale-95 backdrop-blur-sm cursor-pointer"
+          className="absolute hidden sm:flex right-[-20px] md:right-[-50px] lg:right-[-80px] z-40 w-10 h-10 rounded-full bg-card/90 hover:bg-card border border-border shadow-md items-center justify-center text-muted-foreground hover:text-foreground transition-all hover:scale-105 active:scale-95 backdrop-blur-sm cursor-pointer"
           aria-label="Next slide"
         >
           <LuChevronRight className="w-6 h-6" />
@@ -251,7 +251,7 @@ export default function HeroImgs() {
       <div className="flex gap-4 justify-center mt-6 sm:hidden z-20 relative">
         <button
           onClick={handlePrev}
-          className="w-10 h-10 rounded-full bg-white border border-zinc-200 shadow-md flex items-center justify-center text-zinc-700 hover:text-zinc-900 active:scale-95 cursor-pointer"
+          className="w-10 h-10 rounded-full bg-card border border-border shadow-md flex items-center justify-center text-muted-foreground hover:text-foreground active:scale-95 cursor-pointer"
           aria-label="Previous slide"
         >
           <LuChevronLeft className="w-5 h-5" />

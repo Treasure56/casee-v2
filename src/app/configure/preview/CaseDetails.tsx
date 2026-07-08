@@ -37,20 +37,20 @@ export default function CaseDetails() {
     <Confetti active={showConfetti} config={config as ConfettiConfig} />
    </div>
     <div className="flex flex-col gap-4">
-      <h3 className="text-3xl font-bold tracking-tight text-gray-800">
+      <h3 className="text-3xl font-bold tracking-tight text-foreground">
         Your iphone 12 Case
       </h3>
       <p className="bg-brand-secondary/10 rounded-3xl px-3 py-1 inline-flex gap-2 items-center text-brand-secondary self-start">
         <LucideCheckCircle className="h-5 w-5" />
         Available now and ships immediately
       </p>
-      <div className="border border-gray-200 flex flex-col gap-4 p-4 rounded-md">
+      <div className="border border-border flex flex-col gap-4 p-4 rounded-md">
         <div className="flex items-center gap-2">
-          <p className="text-3xl text-gray-800 font-bold">
+          <p className="text-3xl text-foreground font-bold">
             {formatPrice(14.0)}
           </p>
           <div className="flex mt-2 gap-2 items-center">
-            <p className="text-base text-gray-500 line-through">
+            <p className="text-base text-muted-foreground line-through">
               {formatPrice(19.99)}
             </p>
             <p className="text-sm text-white bg-red-500 font-semibold rounded-3xl px-3 py-1">
@@ -58,7 +58,7 @@ export default function CaseDetails() {
             </p>
           </div>
         </div>
-        <p className="text-base text-gray-500">
+        <p className="text-base text-muted-foreground">
           Free shipping on orders over $25
         </p>
       </div>

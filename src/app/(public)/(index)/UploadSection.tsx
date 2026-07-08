@@ -13,7 +13,7 @@ export default function UploadSection() {
             Your Photo. <br />Your Phone Case.
           </h3>
 
-          <p className=" text-sm md:text-base  text-neutral-700 leading-relaxed">
+          <p className=" text-sm md:text-base  text-muted-foreground leading-relaxed">
             Transform your favorite memories into a stunning, protective phone
             case. Our advanced printing technology ensures vibrant colors and
             lasting quality.
@@ -26,7 +26,7 @@ export default function UploadSection() {
               <div className="flex items-center justify-center flex-shrink-0 w-6 h-6 mr-4 rounded-full bg-brand-primary/10 ">
                 <LuCheck className="w-3 h-3 text-brand-primary" />
               </div>
-              <span className=" text-neutral-700 group-hover:text-neutral-900 transition-colors">
+              <span className=" text-muted-foreground group-hover:text-foreground transition-colors">
                 {benefit}
               </span>
             </li>
@@ -44,13 +44,13 @@ export default function UploadSection() {
           <img
             src="/images/arrow.png"
             alt=""
-            className="absolute top-1/2 translate-y-1/2 z-10 left-1/2 -translate-x-1/2  rotate-0"
+            className="absolute top-1/2 translate-y-1/2 z-10 left-1/2 -translate-x-1/2  rotate-0 dark:invert"
           />
-          <div className="relative h-full md:justify-self-end max-w-sm rounded-xl bg-neutral-900 ring-inset ring-neutral-900/10 lg:rounded-2xl">
+          <div className="relative h-full md:justify-self-end max-w-sm rounded-xl bg-surface-elevated ring-inset ring-border lg:rounded-2xl">
             <img
               src="/images/user5.jpg"
               alt=""
-              className="rounded-md object-cover bg-white shadow-2xl ring-1 ring-nueutral-900/10 h-full w-full"
+              className="rounded-md object-cover bg-card shadow-2xl ring-1 ring-border h-full w-full"
             />
           </div>
 

@@ -5,7 +5,7 @@ import Marquee from "@/components/ui/Marquee";
 
 export default function Reviews() {
   return (
-    <div className="[--glob-color:black] bg-[var(--glob-color)] ">
+    <div className="[--glob-color:#0A0A0F] bg-[var(--glob-color)] ">
       <section className="app-container flex flex-col gap-4 justify-center py-12 md:py-16 max-w-[1000px] mx-auto ">
         <h2 className="text-center text-white text-3xl md:text-4xl mb-8 font-bold">
           Satisfied Customers Bought These

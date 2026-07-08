@@ -19,7 +19,7 @@ export default function LoginForm() {
           Sign Up
         </Link>
        </div>
-        <Link href={paths.forgotPassword} className="text-gray-700 ">
+        <Link href={paths.forgotPassword} className="text-muted-foreground ">
           Forgot Password?
         </Link>
       </div>

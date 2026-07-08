@@ -5,7 +5,7 @@ export default function Clients() {
       {users.map((user) => (
         <Image
           key={user}
-          className="inline-block h-8 w-8 md:w-10 md:h-10 rounded-full ring-2 ring-slate-100 object-cover flex-shrink-0 aspect-square"
+          className="inline-block h-8 w-8 md:w-10 md:h-10 rounded-full ring-2 ring-border object-cover flex-shrink-0 aspect-square"
           src={user}
           alt="Apple Store Badge"
           width={100}

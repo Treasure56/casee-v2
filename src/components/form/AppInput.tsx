@@ -60,7 +60,7 @@ export default memo(function AppInput({
       {title && (
         <label
           htmlFor={`${title}-input`}
-          className="inline-block pb-1 text-black-300 text-label"
+          className="inline-block pb-1 text-foreground text-label"
         >
           {title}
         </label>
@@ -99,7 +99,7 @@ export default memo(function AppInput({
               if (onChange) onChange(e.target.value);
             }}
             className={`app-input ${!icon ? "ps-3" : "ps-9"} ${
-              error || fieldError ? "!bg-red-100" : ""
+              error || fieldError ? "!bg-destructive/10" : ""
             }`}
           />
         ) : (
@@ -120,12 +120,12 @@ export default memo(function AppInput({
             }}
             className={`app-input ${ps ? ps : !icon ? "ps-4" : "ps-9"} ${
               type === "password" ? "pe-4" : "pe-9"
-            }  ${error || hasFieldError ? "!bg-red-100" : ""}`}
+            }  ${error || hasFieldError ? "!bg-destructive/10" : ""}`}
           />
         )}
       </div>
-      {error && <p className="text-red-900 text-xs">{error}</p>}
-      {hasFieldError && <p className="text-red-900 text-xs">{fieldError[0]}</p>}
+      {error && <p className="text-destructive text-xs">{error}</p>}
+      {hasFieldError && <p className="text-destructive text-xs">{fieldError[0]}</p>}
     </div>
   );
 });

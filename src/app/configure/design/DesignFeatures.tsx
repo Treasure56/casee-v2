@@ -38,18 +38,18 @@ export default function DesignFeatures() {
   >(finishes.options[0]);
 
   return (
-    <div className=" h-[37.5rem] w-full col-span-full lg:col-span-1 flex flex-col bg-white">
+    <div className=" h-[37.5rem] w-full col-span-full lg:col-span-1 flex flex-col bg-card">
       <ScrollArea className="relative flex-1 overflow-auto">
         <div
           aria-hidden="true"
-          className=" absolute z-10 inset-x-0 bottom-0 h-12 bg-gradient-to-t from-white pointer-events-none"
+          className=" absolute z-10 inset-x-0 bottom-0 h-12 bg-gradient-to-t from-card pointer-events-none"
         />
 
         <div className=" px-8 pb-12 pt-8">
           <h2 className="tracking-tight font-bold text-3xl ">
             Customize your case
           </h2>
-          <div className=" w-full h-px bg-zinc-200 my-6" />
+          <div className=" w-full h-px bg-border my-6" />
           <div className="relative mt-4 h-full flex flex-col justify-between">
             <div className=" flex flex-col gap-6">
               <RadioGroup
@@ -94,7 +94,7 @@ export default function DesignFeatures() {
                   <SelectTrigger className="w-full rounded-md !py-5">
                     <SelectValue placeholder="Select a model" />
                   </SelectTrigger>
-                  <SelectContent className="border-white bg-white">
+                  <SelectContent className="border-border bg-card">
                     {models.options.map((model) => (
                       <SelectItem
                         key={model.value}
@@ -123,7 +123,7 @@ export default function DesignFeatures() {
                         key={mtl.label}
                         htmlFor={mtl.value}
                         className={cn(
-                          "relative block cursor-pointer rounded-lg bg-white px-6 py-4 shadow-sm border border-zinc-200 sm:flex sm:justify-between w-full",
+                          "relative block cursor-pointer rounded-lg bg-card px-6 py-4 shadow-sm border border-border sm:flex sm:justify-between w-full",
                           {
                             "border-brand-primary":
                               selectedMaterial.value === mtl.value,
@@ -131,16 +131,16 @@ export default function DesignFeatures() {
                         )}
                       >
                         <div className="flex flex-col text-sm">
-                          <span className="font-medium text-gray-900">
+                          <span className="font-medium text-foreground">
                             {mtl.label}
                           </span>
                           {mtl.description && (
-                            <span className="text-gray-500">
+                            <span className="text-muted-foreground">
                               {mtl.description}
                             </span>
                           )}
                         </div>
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-foreground">
                           {formatPrice(mtl.price)}
                         </span>
                         <RadioGroupItem 
@@ -167,7 +167,7 @@ export default function DesignFeatures() {
                         key={finish.label}
                         htmlFor={finish.value}
                         className={cn(
-                          "relative block cursor-pointer rounded-lg bg-white px-6 py-4 shadow-sm border border-zinc-200 sm:flex sm:justify-between w-full",
+                          "relative block cursor-pointer rounded-lg bg-card px-6 py-4 shadow-sm border border-border sm:flex sm:justify-between w-full",
                           {
                             "border-brand-primary":
                               selectedFinish.value === finish.value,
@@ -175,16 +175,16 @@ export default function DesignFeatures() {
                         )}
                       >
                         <div className="flex flex-col text-sm">
-                          <span className="font-medium text-gray-900">
+                          <span className="font-medium text-foreground">
                             {finish.label}
                           </span>
                           {finish.description && (
-                            <span className="text-gray-500">
+                            <span className="text-muted-foreground">
                               {finish.description}
                             </span>
                           )}
                         </div>
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-foreground">
                           {formatPrice(finish.price)}
                         </span>
                         <RadioGroupItem

@@ -28,7 +28,7 @@ export default function DesignConfig({
     y: 205,
   })
   return (
-    <div className="relative h-[73.5rem] bg-gray-900/2 overflow-hidden col-span-2 w-full max-w-4xl  flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary  focus: ring-offdet">
+    <div className="relative h-[73.5rem] bg-muted/50 overflow-hidden col-span-2 w-full max-w-4xl  flex items-center justify-center rounded-lg border-2 border-dashed border-border p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary  focus: ring-offdet">
       <div className="relative w-60 bg-opacity-50 pointer-events-none aspect-[896/1831]">
         <AspectRatio
           ratio={896 / 1831}
@@ -41,7 +41,7 @@ export default function DesignConfig({
             className=" pointer-events-none z-50 select-none"
           />
         </AspectRatio>
-        <div className="absolute inset-0 z-40 left-[3px] top-px right-[3px] bottom-px rounded-[32px] shadow-[0_0_0_99999px_rgba(229,231,235,0.3)]" />
+        <div className="absolute inset-0 z-40 left-[3px] top-px right-[3px] bottom-px rounded-[32px] shadow-[0_0_0_99999px_rgba(229,231,235,0.3)] dark:shadow-[0_0_0_99999px_rgba(10,10,15,0.5)]" />
         <div
           className={cn(
             " absolute inset-0  left-[3px] top-px right-[3px] bottom-px rounded-[32px]",

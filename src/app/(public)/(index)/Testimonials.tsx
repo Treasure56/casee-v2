@@ -4,7 +4,7 @@ import TestimonialCard from "@/components/home/TestimonialCard";
 
 export default function Testimonials() {
   return (
-    <section className="flex flex-col gap-4  py-16 justify-center relative bg-brand-primary/1">
+    <section className="flex flex-col gap-4  py-16 justify-center relative">
       <h2 className="text-center text-3xl md:text-4xl mb-8 font-bold">
         What our customers say
       </h2>

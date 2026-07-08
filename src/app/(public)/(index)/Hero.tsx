@@ -14,10 +14,10 @@ export default function Hero() {
         width={400}
         src="/images/hero-bg.webp"
         alt="hero-img"
-        className="absolute inset-0 size-full object-cover opacity-10 "
+        className="absolute inset-0 size-full object-cover opacity-10 dark:opacity-5 "
       />
       <div
-        className="absolute inset-0 size-full object-cover bg-gradient-to-b from-white via-transparent to-white "
+        className="absolute inset-0 size-full object-cover bg-gradient-to-b from-background via-transparent to-background "
       />
       <div className="relative">
         <HeroPills>
@@ -33,7 +33,7 @@ export default function Hero() {
             </span>{" "}
             Phone Case
           </h1>
-          <h2 className="text-gray-600 md:text-base text-sm max-w-[700px] text-center ">
+          <h2 className="text-muted-foreground md:text-base text-sm max-w-[700px] text-center ">
             Turn your favorite memories into a one-of-a-kind phone case. With
             Casee, you&apos;re not just protecting your phone you&apos;re
             preserving what matters most.
