@@ -131,10 +131,10 @@ export default function HeroImgs() {
       zIndex,
       width: isActive ? "var(--active-w)" : "var(--inactive-w)",
       height: isActive ? "var(--active-h)" : "var(--inactive-h)",
-      borderTopRightRadius: isActive ? "9% 7.5%" : "20px",
-      borderTopLeftRadius: isActive ? "9% 7.5%" : "20px",
-      borderBottomRightRadius: isActive ? "9% 7.5%" : "20px",
-      borderBottomLeftRadius: isActive ? "10% 7.5%" : "20px",
+      borderTopRightRadius: isActive ? "12% 10%" : "20px",
+      borderTopLeftRadius: isActive ? "12% 10%" : "20px",
+      borderBottomRightRadius: isActive ? "12% 10%" : "20px",
+      borderBottomLeftRadius: isActive ? "14% 10%" : "20px",
     };
   };
 
@@ -217,12 +217,12 @@ export default function HeroImgs() {
           }}
         >
           <div
-            className="w-full h-full absolute inset-0 overflow-hidden"
+            className="w-full h-full absolute inset-[2px] overflow-hidden"
             style={{
-              borderTopRightRadius: "9% 7.5%",
-              borderTopLeftRadius: "9% 7.5%",
-              borderBottomRightRadius: "9% 7.5%",
-              borderBottomLeftRadius: "10% 7.5%",
+               borderTopRightRadius: "12% 10%",
+               borderTopLeftRadius: "12% 10%",
+               borderBottomRightRadius: "12% 10%",
+               borderBottomLeftRadius: "14% 10%",
             }}
           >
             <img

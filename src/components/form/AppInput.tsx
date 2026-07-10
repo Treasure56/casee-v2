@@ -46,13 +46,13 @@ export default memo(function AppInput({
 }: AppInputProps) {
   // const [_type, setType] = useState(type);
   const [eyeOpen, setEyeOpen] = useState(false);
-  const [val, setVal] = useState(value);
+  const [val, setVal] = useState(value ?? "");
   const [error] = useState<string | null>(null);
   const hasFieldError = fieldError && fieldError.length > 0 && fieldError[0];
   // const hasUpdated = useRef(false);
 
   useEffect(() => {
-    setVal(value);
+    setVal(value ?? "");
   }, [value]);
 
   return (

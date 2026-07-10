@@ -28,6 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${outfit.variable} ${outfit.className} antialiased scroll-smooth bg-background text-foreground`}
       >
         <ThemeProvider>

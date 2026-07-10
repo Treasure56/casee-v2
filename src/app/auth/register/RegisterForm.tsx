@@ -1,13 +1,26 @@
-import AppInput, { AppInputProps } from "@/components/form/AppInput";
+"use client";
+
+import AppInput from "@/components/form/AppInput";
 import FormButton from "@/components/form/FormButton";
+import { FormMessage } from "@/components/form/FormMessage";
+import { useAppActionState } from "@/hooks/useAppActionState";
 import { paths } from "@/utils/paths";
 import Link from "next/link";
+import { registerAction } from "@/actions/auth";
 
 export default function RegisterForm() {
+  const { state, action, formKey } = useAppActionState(registerAction);
+
   return (
-    <form className="flex flex-col gap-4 w-full">
+    <form key={formKey} action={action} className="flex flex-col gap-4 w-full">
+      <FormMessage res={state} />
+
       {formFields.map((field) => (
-        <AppInput key={field.name} {...field} />
+        <AppInput
+          key={field.name}
+          {...field}
+          error={state?.fieldErrors?.[field.name]}
+        />
       ))}
 
       <p className="text-xs text-center text-neutral-400 my-2 w-full">
@@ -24,8 +37,15 @@ export default function RegisterForm() {
         </Link>
         .
       </p>
-      <FormButton className="w-full btn btn-primary !py-3 !rounded-md">Sign Up</FormButton>
-       <div className=" flex gap-2">
+
+      <FormButton
+        type="submit"
+        className="w-full btn btn-primary !py-3 !rounded-md"
+      >
+        Sign Up
+      </FormButton>
+
+      <div className="flex gap-2 justify-center">
         <p>Already have an account?</p>
         <Link href={paths.login} className="text-brand-primary font-semibold">
           Login
@@ -35,9 +55,9 @@ export default function RegisterForm() {
   );
 }
 
-const formFields: AppInputProps[] = [
+const formFields = [
   {
-    name: "Full Name",
+    name: "name",
     placeholder: "Enter your full name",
     title: "Full Name",
   },

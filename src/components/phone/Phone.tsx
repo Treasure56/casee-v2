@@ -15,6 +15,12 @@ export default function Phone({ imgSrc, className, dark = false, ...props }: Pho
   return (
     <div
       className={cn("relative pointer-events-none z-50 overflow-hidden", className)}
+      style={{
+        borderTopRightRadius: "12% 10%",
+        borderTopLeftRadius: "12% 10%",
+        borderBottomRightRadius: "12% 10%",
+        borderBottomLeftRadius: "14% 10%",
+      }}
       {...props}
     >
       <img

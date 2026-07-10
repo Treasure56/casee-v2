@@ -1,9 +1,9 @@
 'use client'
-import { HTMLAttributes } from "react";
+import { ButtonHTMLAttributes } from "react";
 import { useFormStatus } from "react-dom";
 import { FaSpinner } from "react-icons/fa6";
 
-export type FormButtonProps = HTMLAttributes<HTMLButtonElement> & {
+export type FormButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?:boolean;
 }
 

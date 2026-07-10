@@ -10,7 +10,8 @@ export default function UploadSection() {
       <div className="flex flex-col space-y-8 w-full md:w-4/12">
         <div className="space-y-4">
           <h3 className="md:text-4xl text-3xl font-bold leading-0.9">
-            Your Photo. <br />Your Phone Case.
+            Your Photo. <br />
+            Your Phone Case.
           </h3>
 
           <p className=" text-sm md:text-base  text-muted-foreground leading-relaxed">
@@ -48,16 +49,15 @@ export default function UploadSection() {
           />
           <div className="relative h-full md:justify-self-end max-w-sm rounded-xl bg-surface-elevated ring-inset ring-border lg:rounded-2xl">
             <img
-              src="/images/user5.jpg"
+              src="/images/case6.jpeg"
               alt=""
               className="rounded-md object-cover bg-card shadow-2xl ring-1 ring-border h-full w-full"
             />
           </div>
 
-          <WhiteBgPhone className=" md:w-48 w-30 " src="/images/user5.jpg" />
+          <WhiteBgPhone className=" md:w-48 w-30 " src="/images/case6.jpeg" />
         </div>
       </div>
-
     </section>
   );
 }
