@@ -1,4 +1,5 @@
 "use client";
+
 import {
   colors,
   finishes,
@@ -9,8 +10,6 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
-
 import {
   Select,
   SelectContent,
@@ -22,20 +21,32 @@ import { formatPrice } from "@/functions/helpers";
 import FormButton from "@/components/form/FormButton";
 import { basePrice } from "@/data/product";
 
-export default function DesignFeatures() {
-  const [selectedColor, setSelectedColor] = useState<(typeof colors)[number]>(
-    colors[0]
-  );
-  const [selectedModel, setSelectedModel] = useState<
-    (typeof models.options)[number]
-  >(models.options[0]);
+type DesignFeaturesProps = {
+  selectedColor: (typeof colors)[number];
+  setSelectedColor: (color: (typeof colors)[number]) => void;
+  selectedModel: (typeof models.options)[number];
+  setSelectedModel: (model: (typeof models.options)[number]) => void;
+  selectedMaterial: (typeof material.options)[number];
+  setSelectedMaterial: (mtl: (typeof material.options)[number]) => void;
+  selectedFinish: (typeof finishes.options)[number];
+  setSelectedFinish: (finish: (typeof finishes.options)[number]) => void;
+  onSave: () => void;
+  isSaving: boolean;
+};
 
-  const [selectedMaterial, setSelectedMaterial] = useState<
-    (typeof material.options)[number]
-  >(material.options[0]);
-  const [selectedFinish, setSelectedFinish] = useState<
-    (typeof finishes.options)[number]
-  >(finishes.options[0]);
+export default function DesignFeatures({
+  selectedColor,
+  setSelectedColor,
+  selectedModel,
+  setSelectedModel,
+  selectedMaterial,
+  setSelectedMaterial,
+  selectedFinish,
+  setSelectedFinish,
+  onSave,
+  isSaving,
+}: DesignFeaturesProps) {
+  const totalPrice = basePrice + selectedMaterial.price + selectedFinish.price;
 
   return (
     <div className=" h-[37.5rem] w-full col-span-full lg:col-span-1 flex flex-col bg-card">
@@ -53,6 +64,7 @@ export default function DesignFeatures() {
           <div className="relative mt-4 h-full flex flex-col justify-between">
             <div className=" flex flex-col gap-6">
               <RadioGroup
+                value={selectedColor.value}
                 onValueChange={(val) => {
                   const color = colors.find((c) => c.value === val);
                   if (color) setSelectedColor(color);
@@ -69,14 +81,14 @@ export default function DesignFeatures() {
                         {
                           [`border-${color.tw}`]:
                             selectedColor.value === color.value,
-                        }
+                        },
                       )}
                     >
                       <RadioGroupItem
                         value={color.value}
                         id={color.value}
                         className={cn(`bg-${color.tw} size-8`)}
-                      ></RadioGroupItem>
+                      />
                     </Label>
                   ))}
                 </div>
@@ -127,7 +139,7 @@ export default function DesignFeatures() {
                           {
                             "border-brand-primary":
                               selectedMaterial.value === mtl.value,
-                          }
+                          },
                         )}
                       >
                         <div className="flex flex-col text-sm">
@@ -143,7 +155,7 @@ export default function DesignFeatures() {
                         <span className="text-sm font-medium text-foreground">
                           {formatPrice(mtl.price)}
                         </span>
-                        <RadioGroupItem 
+                        <RadioGroupItem
                           value={mtl.value}
                           id={mtl.value}
                           className=" sr-only"
@@ -155,7 +167,9 @@ export default function DesignFeatures() {
 
                 <RadioGroup
                   onValueChange={(val) => {
-                    const finish = finishes.options.find((c) => c.value === val);
+                    const finish = finishes.options.find(
+                      (c) => c.value === val,
+                    );
                     if (finish) setSelectedFinish(finish);
                   }}
                   value={selectedFinish.value}
@@ -171,7 +185,7 @@ export default function DesignFeatures() {
                           {
                             "border-brand-primary":
                               selectedFinish.value === finish.value,
-                          }
+                          },
                         )}
                       >
                         <div className="flex flex-col text-sm">
@@ -194,8 +208,18 @@ export default function DesignFeatures() {
                         />
                       </Label>
                     ))}
-                    <Label className="text-start"> Total price: {formatPrice(basePrice + selectedMaterial.price + selectedFinish.price)}</Label>
-                    <FormButton className="w-full btn btn-primary !py-3 !rounded-md">Continue</FormButton>
+                    <Label className="text-start">
+                      {" "}
+                      Total price:{" "}
+                      {formatPrice(totalPrice)}
+                    </Label>
+                    <FormButton
+                      onClick={onSave}
+                      disabled={isSaving}
+                      className="w-full btn btn-primary !py-3 !rounded-md"
+                    >
+                      {isSaving ? "Saving design..." : "Continue"}
+                    </FormButton>
                   </div>
                 </RadioGroup>
               </div>
