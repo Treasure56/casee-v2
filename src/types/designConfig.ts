@@ -4,6 +4,17 @@ export type DesignConfigType = {
   ImageDimensions: { width: number; height: number };
 };
 
+export type ImageLayer = {
+  id: string;
+  url: string;
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+  renderedWidth: number;
+  renderedHeight: number;
+};
+
 export type SaveConfigParams = {
   configId?: string;
   imageUrl: string;
@@ -13,8 +24,5 @@ export type SaveConfigParams = {
   model: string;
   material: string;
   finish: string;
-  x: number;
-  y: number;
-  renderedWidth: number;
-  renderedHeight: number;
+  images: ImageLayer[];
 };

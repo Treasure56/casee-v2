@@ -13,7 +13,9 @@ import { cn } from "@/lib/utils";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -78,16 +80,13 @@ export default function DesignFeatures({
                       htmlFor={color.value}
                       className={cn(
                         "relative -m-0.5 mx-1 flex cursor-pointer items-center justify-center rounded-full p-0.5 active:ring-0 focus:ring-0 active:outline-none focus:outline-none border-2 border-separate border-transparent",
-                        {
-                          [`border-${color.tw}`]:
-                            selectedColor.value === color.value,
-                        },
+                        selectedColor.value === color.value ? color.borderClass : ""
                       )}
                     >
                       <RadioGroupItem
                         value={color.value}
                         id={color.value}
-                        className={cn(`bg-${color.tw} size-8`)}
+                        className={cn(color.bgClass, "size-8")}
                       />
                     </Label>
                   ))}
@@ -107,14 +106,19 @@ export default function DesignFeatures({
                     <SelectValue placeholder="Select a model" />
                   </SelectTrigger>
                   <SelectContent className="border-border bg-card">
-                    {models.options.map((model) => (
-                      <SelectItem
-                        key={model.value}
-                        value={model.value}
-                        onClick={() => setSelectedModel(model)}
-                      >
-                        {model.label}
-                      </SelectItem>
+                    {(["Apple", "Samsung", "Google"] as const).map((brand) => (
+                      <SelectGroup key={brand}>
+                        <SelectLabel className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider bg-muted/20">
+                          {brand}
+                        </SelectLabel>
+                        {models.options
+                          .filter((model) => model.brand === brand)
+                          .map((model) => (
+                            <SelectItem key={model.value} value={model.value}>
+                              {model.label}
+                            </SelectItem>
+                          ))}
+                      </SelectGroup>
                     ))}
                   </SelectContent>
                 </Select>

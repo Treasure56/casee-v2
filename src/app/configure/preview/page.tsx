@@ -3,6 +3,7 @@ import Configuration from "@/types/Configuration";
 import CaseDetails from "./CaseDetails";
 import DesignedCase from "./DesignedCase";
 import { notFound } from "next/navigation";
+import { ImageLayer } from "@/types/designConfig";
 
 type PageProps = {
   searchParams: Promise<{
@@ -25,12 +26,38 @@ export default async function Page({ searchParams }: PageProps) {
     return notFound();
   }
 
+  // Parse images list with legacy fallback formatting
+  const images: ImageLayer[] = (config.images && config.images.length > 0)
+    ? JSON.parse(JSON.stringify(config.images)).map((img: any) => ({
+        id: img.id,
+        url: img.url,
+        width: img.width,
+        height: img.height,
+        x: img.x,
+        y: img.y,
+        renderedWidth: img.renderedWidth,
+        renderedHeight: img.renderedHeight,
+      }))
+    : [
+        {
+          id: "base",
+          url: config.imageUrl,
+          width: config.width,
+          height: config.height,
+          x: config.x || 40,
+          y: config.y || 120,
+          renderedWidth: config.renderedWidth || 150,
+          renderedHeight: config.renderedHeight || 300,
+        },
+      ];
+
   return (
     <div className="app-container py-12 grid grid-cols-12 gap-6 items-center">
       <div className="flex flex-col md:col-span-4">
         <DesignedCase
-          imageUrl={config.imageUrl}
+          images={images}
           colorValue={config.color || "black-titanium"}
+          modelValue={config.phoneModel || "iphone15"}
         />
       </div>
       <div className="md:col-span-8">

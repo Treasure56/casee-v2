@@ -9,6 +9,16 @@ export async function saveDesignConfigAction(params: SaveConfigParams) {
 
   try {
     let config;
+    
+    // Legacy fallback coordinates
+    const firstImg = params.images[0];
+    const legacyCoords = {
+      x: firstImg?.x || 0,
+      y: firstImg?.y || 0,
+      renderedWidth: firstImg?.renderedWidth || 0,
+      renderedHeight: firstImg?.renderedHeight || 0,
+    };
+
     if (
       params.configId &&
       params.configId !== "undefined" &&
@@ -22,10 +32,8 @@ export async function saveDesignConfigAction(params: SaveConfigParams) {
           phoneModel: params.model,
           material: params.material,
           finish: params.finish,
-          x: params.x,
-          y: params.y,
-          renderedWidth: params.renderedWidth,
-          renderedHeight: params.renderedHeight,
+          ...legacyCoords,
+          images: params.images,
         },
         { new: true }
       );
@@ -38,10 +46,8 @@ export async function saveDesignConfigAction(params: SaveConfigParams) {
         phoneModel: params.model,
         material: params.material,
         finish: params.finish,
-        x: params.x,
-        y: params.y,
-        renderedWidth: params.renderedWidth,
-        renderedHeight: params.renderedHeight,
+        ...legacyCoords,
+        images: params.images,
       });
     }
 

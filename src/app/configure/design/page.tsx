@@ -6,6 +6,7 @@ import DesignConfig from "./DesignConfig";
 import DesignFeatures from "./DesignFeatures";
 import { colors, models, material, finishes } from "@/validators/optionValidators";
 import { saveDesignConfigAction } from "@/actions/design";
+import { ImageLayer } from "@/types/designConfig";
 
 function DesignWorkspace() {
   const searchParams = useSearchParams();
@@ -30,15 +31,19 @@ function DesignWorkspace() {
     (typeof finishes.options)[number]
   >(finishes.options[0]);
 
-  // 2. Shared Dimensions and Coordinates
-  const [renderedDimension, setRenderedDimension] = useState({
-    width: width / 4,
-    height: height / 4,
-  });
-  const [renderedPosition, setRenderedPosition] = useState({
-    x: 40,
-    y: 120,
-  });
+  // 2. Shared Multiple Image Layers State
+  const [images, setImages] = useState<ImageLayer[]>([
+    {
+      id: "base",
+      url: imageUrl,
+      width,
+      height,
+      x: 150,
+      y: 150,
+      renderedWidth: width / 4,
+      renderedHeight: height / 4,
+    },
+  ]);
 
   const [isSaving, setIsSaving] = useState(false);
 
@@ -54,10 +59,7 @@ function DesignWorkspace() {
         model: selectedModel.value,
         material: selectedMaterial.value,
         finish: selectedFinish.value,
-        x: renderedPosition.x,
-        y: renderedPosition.y,
-        renderedWidth: renderedDimension.width,
-        renderedHeight: renderedDimension.height,
+        images,
       });
 
       if (result.success && result.configId) {
@@ -76,13 +78,10 @@ function DesignWorkspace() {
   return (
     <div className="grid grid-cols-3 gap-6 py-6 app-container">
       <DesignConfig
-        imageUrl={imageUrl}
-        imageDimensions={{ width, height }}
+        images={images}
+        setImages={setImages}
         color={selectedColor}
-        renderedDimension={renderedDimension}
-        setRenderedDimension={setRenderedDimension}
-        renderedPosition={renderedPosition}
-        setRenderedPosition={setRenderedPosition}
+        model={selectedModel}
       />
       <DesignFeatures
         selectedColor={selectedColor}

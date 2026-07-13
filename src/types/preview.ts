@@ -1,6 +1,9 @@
+import { ImageLayer } from "./designConfig";
+
 export type DesignedCaseProps = {
-  imageUrl: string;
+  images: ImageLayer[];
   colorValue: string;
+  modelValue: string;
 };
 
 export type CaseDetailsProps = {
