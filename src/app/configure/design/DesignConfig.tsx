@@ -33,13 +33,13 @@ export default function DesignConfig({
   let radiusClass = "rounded-[32px]";
 
   if (model.brand === "Google") {
-    templateSrc = "/images/phone-templates/pixel.png?v=5";
+    templateSrc = "/images/phone-templates/pixel.png?v=14";
     aspect = 303 / 607;
     radiusClass = "rounded-[36px]";
   } else if (model.brand === "Samsung") {
-    templateSrc = "/images/phone-templates/samsung.png?v=5";
+    templateSrc = "/images/phone-templates/samsung.png?v=14";
     aspect = 214 / 437;
-    radiusClass = "rounded-[16px]";
+    radiusClass = "rounded-[6px]";
   }
 
   const handleAddImageClick = () => {
@@ -153,7 +153,7 @@ export default function DesignConfig({
         <div
           className={cn(
             "absolute inset-0 left-[3px] top-px right-[3px] bottom-px transition-colors duration-300",
-            `bg-${color.tw}`,
+            color.bgClass,
             radiusClass
           )}
         />

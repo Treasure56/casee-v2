@@ -18,13 +18,13 @@ export default function DesignedCase({
   let radiusClass = "rounded-[32px]";
 
   if (modelObj.brand === "Google") {
-    templateSrc = "/images/phone-templates/pixel.png?v=5";
+    templateSrc = "/images/phone-templates/pixel.png?v=14";
     aspect = 303 / 607;
     radiusClass = "rounded-[36px]";
   } else if (modelObj.brand === "Samsung") {
-    templateSrc = "/images/phone-templates/samsung.png?v=5";
+    templateSrc = "/images/phone-templates/samsung.png?v=14";
     aspect = 214 / 437;
-    radiusClass = "rounded-[16px]";
+    radiusClass = "rounded-[6px]";
   }
 
   return (
@@ -53,7 +53,7 @@ export default function DesignedCase({
         <div
           className={cn(
             "absolute inset-0 left-[3px] top-px right-[3px] bottom-px transition-colors duration-300 -z-10",
-            `bg-${tw}`,
+            colorObj.bgClass,
             radiusClass
           )}
         />
