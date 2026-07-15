@@ -12,26 +12,39 @@ export default function DesignedCase({
   const colorObj = colors.find((c) => c.value === colorValue) || colors[0];
   const tw = colorObj.tw;
 
-  const modelObj = models.options.find((m) => m.value === modelValue) || models.options[0];
+  const modelObj =
+    models.options.find((m) => m.value === modelValue) || models.options[0];
   let templateSrc = "/images/phone-templates/iphone.png";
   let aspect = 896 / 1831;
   let radiusClass = "rounded-[32px]";
+  let offsetClass = "left-[3px] top-px right-[3px] bottom-px";
 
-  if (modelObj.brand === "Google") {
-    templateSrc = "/images/phone-templates/pixel.png?v=14";
-    aspect = 303 / 607;
-    radiusClass = "rounded-[36px]";
+  if (modelObj.value === "iphone16" || modelObj.value === "iphone16pro" || modelObj.value === "iphone16promax") {
+    templateSrc = "/images/phone-templates/iphone16.png?v=1";
+    aspect = 172 / 357;
+    radiusClass = "rounded-[24px]";
+    offsetClass = "left-[3px] top-[2px] right-[3px] bottom-[2px]";
+  } else if (modelObj.value === "iphone17pro") {
+    templateSrc = "/images/phone-templates/iphone17pro.png?v=37";
+    aspect = 196 / 404;
+    radiusClass = "rounded-[24px]";
+    offsetClass = "left-[4px] top-[2px] right-[4px] bottom-[3px]";
+  } else if (modelObj.brand === "Google") {
+    templateSrc = "/images/phone-templates/pixel.png?v=28"; // Increment version for cache busting
+    aspect = 291 / 607;
+    radiusClass = "rounded-[24px]";
+    offsetClass = "left-[6px] top-[6px] right-[6px] bottom-[5px]";
   } else if (modelObj.brand === "Samsung") {
     templateSrc = "/images/phone-templates/samsung.png?v=14";
     aspect = 214 / 437;
     radiusClass = "rounded-[6px]";
+    offsetClass = "left-[3px] top-px right-[3px] bottom-px";
   }
 
   return (
     <div className="relative h-[37.5rem] w-full bg-muted/50 overflow-hidden flex items-center justify-center rounded-lg border border-border">
-      
       {/* Phone Case Canvas Overlay */}
-      <div 
+      <div
         className="relative w-60 bg-opacity-50 pointer-events-none z-40"
         style={{ aspectRatio: aspect }}
       >
@@ -47,14 +60,26 @@ export default function DesignedCase({
         </AspectRatio>
 
         {/* Clip mask (hides parts of custom images bleeding outside the phone boundaries) */}
-        <div className={cn("absolute inset-0 z-40 left-[3px] top-px right-[3px] bottom-px shadow-[0_0_0_99999px_var(--background)]", radiusClass)} />
+        <div
+          className={cn(
+            "absolute inset-0 z-40 shadow-[0_0_0_99999px_var(--background)]",
+            offsetClass,
+            radiusClass,
+          )}
+        />
 
         {/* Dynamic color background */}
         <div
           className={cn(
-            "absolute inset-0 left-[3px] top-px right-[3px] bottom-px transition-colors duration-300 -z-10",
+            "absolute transition-colors duration-300 -z-10",
+            (modelObj.value === "iphone16" || modelObj.value === "iphone16pro" || modelObj.value === "iphone16promax")
+              ? "left-[4px] top-[3px] right-[4px] bottom-[3px] rounded-[20px]"
+              : modelObj.value === "iphone17pro"
+              ? "left-[5px] top-[3px] right-[5px] bottom-[4px] rounded-[20px]"
+              : modelObj.brand === "Google"
+                ? "left-[7px] top-[7px] right-[7px] bottom-[5px] rounded-[20px]"
+                : cn("inset-0", offsetClass, radiusClass),
             colorObj.bgClass,
-            radiusClass
           )}
         />
       </div>

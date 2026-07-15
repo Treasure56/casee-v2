@@ -3,13 +3,38 @@
 import { colors } from "@/validators/optionValidators";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+
 import { Rnd } from "react-rnd";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ImageLayer } from "@/types/designConfig";
-import { LuImagePlus, LuLoader } from "react-icons/lu";
+import {
+  LuImagePlus,
+  LuLoader,
+  LuChevronUp,
+  LuChevronDown,
+  LuTrash2,
+} from "react-icons/lu";
+import ImageToolbar from "./ImageToolbar";
 
 import { models } from "@/validators/optionValidators";
+
+import Moveable from "react-moveable";
+
+const toggleBackgroundRemoval = (url: string, removeBg: boolean): string => {
+  if (!url || !url.includes("cloudinary")) return url;
+  
+  // Remove existing background removal transformation
+  let cleanUrl = url.replace(/\/e_background_removal\//, "/");
+  
+  if (removeBg) {
+    // Add Cloudinary's AI background removal effect
+    cleanUrl = cleanUrl.replace("/upload/", "/upload/e_background_removal/");
+    // Convert format to .png to ensure transparent alpha channel is supported
+    cleanUrl = cleanUrl.replace(/\.[a-zA-Z0-9]+$/, ".png");
+  }
+  
+  return cleanUrl;
+};
 
 type DesignConfigProps = {
   images: ImageLayer[];
@@ -24,32 +49,120 @@ export default function DesignConfig({
   color,
   model,
 }: DesignConfigProps) {
-  const [activeId, setActiveId] = useState<string | null>(images[0]?.id || null);
+  const [activeId, setActiveId] = useState<string | null>(
+    images[0]?.id || null,
+  );
+  const [target, setTarget] = useState<HTMLElement | null>(null);
+  const moveableRef = useRef<any>(null);
+  const [contextMenu, setContextMenu] = useState<{
+    x: number;
+    y: number;
+    layerId: string;
+  } | null>(null);
+  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploadingLayer, setIsUploadingLayer] = useState(false);
 
-  let templateSrc = "/images/phone-templates/iphone.png";
+  const startLongPress = (
+    e: React.MouseEvent | React.TouchEvent,
+    layerId: string,
+  ) => {
+    // Determine pointer coordinates
+    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+    const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
+
+    longPressTimer.current = setTimeout(() => {
+      setContextMenu({
+        x: clientX,
+        y: clientY,
+        layerId,
+      });
+      setActiveId(layerId);
+    }, 600); // 600ms long press
+  };
+
+  const cancelLongPress = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+    }
+  };
+
+  useEffect(() => {
+    const handleClose = () => setContextMenu(null);
+    window.addEventListener("click", handleClose);
+    return () => window.removeEventListener("click", handleClose);
+  }, []);
+
+  // Sync Moveable handles when state changes externally (e.g. Reset Transforms)
+  useEffect(() => {
+    if (target) {
+      const handle = requestAnimationFrame(() => {
+        moveableRef.current?.updateRect();
+      });
+      return () => cancelAnimationFrame(handle);
+    }
+  }, [images, target]);
+
+  /** Update specific properties of a single image layer */
+  const updateLayer = (id: string, updates: Partial<ImageLayer>) => {
+    setImages((prev) =>
+      prev.map((img) => (img.id === id ? { ...img, ...updates } : img)),
+    );
+  };
+
+  /** Swap layer order: "up" moves toward end (renders on top), "down" moves toward start */
+  const reorderLayer = (id: string, direction: "up" | "down") => {
+    setImages((prev) => {
+      const index = prev.findIndex((img) => img.id === id);
+      if (index === -1) return prev;
+
+      const swapIndex = direction === "up" ? index + 1 : index - 1;
+      if (swapIndex < 0 || swapIndex >= prev.length) return prev;
+
+      const next = [...prev];
+      [next[index], next[swapIndex]] = [next[swapIndex], next[index]];
+      return next;
+    });
+  };
+
+  let templateSrc = "/images/phone-template.png";
   let aspect = 896 / 1831;
   let radiusClass = "rounded-[32px]";
+  let offsetClass = "left-[3px] top-px right-[3px] bottom-px";
 
-  if (model.brand === "Google") {
-    templateSrc = "/images/phone-templates/pixel.png?v=14";
-    aspect = 303 / 607;
-    radiusClass = "rounded-[36px]";
+  if (
+    model.value === "iphone16" ||
+    model.value === "iphone16pro" ||
+    model.value === "iphone16promax"
+  ) {
+    templateSrc = "/images/phone-templates/iphone16.png?v=1";
+    aspect = 172 / 357;
+    radiusClass = "rounded-[24px]";
+    offsetClass = "left-[3px] top-[2px] right-[3px] bottom-[2px]";
+  } else if (model.value === "iphone17pro") {
+    templateSrc = "/images/phone-templates/iphone17pro.png?v=37";
+    aspect = 196 / 404;
+    radiusClass = "rounded-[24px]";
+    offsetClass = "left-[4px] top-[2px] right-[4px] bottom-[3px]";
+  } else if (model.brand === "Google") {
+    templateSrc = "/images/phone-templates/pixel.png?v=28"; // Increment version for cache busting
+    aspect = 291 / 607;
+    radiusClass = "rounded-[24px]";
+    offsetClass = "left-[6px] top-[6px] right-[6px] bottom-[5px]";
   } else if (model.brand === "Samsung") {
     templateSrc = "/images/phone-templates/samsung.png?v=14";
     aspect = 214 / 437;
     radiusClass = "rounded-[6px]";
+    offsetClass = "left-[3px] top-px right-[3px] bottom-px";
   }
 
   const handleAddImageClick = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const [isDragOverCanvas, setIsDragOverCanvas] = useState(false);
 
+  const processAndUploadFile = async (file: File) => {
     setIsUploadingLayer(true);
     try {
       if (file.size > 25 * 1024 * 1024) {
@@ -86,6 +199,11 @@ export default function DesignConfig({
             y: Math.min(150 + images.length * 15, 200),
             renderedWidth: width / 4,
             renderedHeight: height / 4,
+            rotation: 0,
+            flipH: false,
+            flipV: false,
+            opacity: 1,
+            removeBg: false,
           };
 
           setImages((prev) => [...prev, newLayer]);
@@ -102,9 +220,147 @@ export default function DesignConfig({
     }
   };
 
+  const processAndUploadUrl = async (url: string) => {
+    setIsUploadingLayer(true);
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url }),
+      });
+
+      if (!response.ok) throw new Error("Upload failed");
+
+      const data = await response.json();
+      const width = data.width || 300;
+      const height = data.height || 300;
+
+      const newLayer: ImageLayer = {
+        id: `layer-${Date.now()}`,
+        url: data.imageUrl,
+        width,
+        height,
+        x: Math.min(150 + images.length * 15, 200),
+        y: Math.min(150 + images.length * 15, 200),
+        renderedWidth: width / 4,
+        renderedHeight: height / 4,
+        rotation: 0,
+        flipH: false,
+        flipV: false,
+        opacity: 1,
+        removeBg: false,
+      };
+
+      setImages((prev) => [...prev, newLayer]);
+      setActiveId(newLayer.id);
+    } catch (err) {
+      alert("Failed to import external image. Please try again.");
+    } finally {
+      setIsUploadingLayer(false);
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    await processAndUploadFile(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOverCanvas(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragOverCanvas(false);
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOverCanvas(false);
+
+    console.log("--- DROP EVENT ---");
+    
+    // 1. Handle local file drops (or browser-downloaded files)
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      console.log("File dropped:", file.name, "MIME Type:", file.type);
+      const isImage = file.type.startsWith("image/") || /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i.test(file.name);
+      if (!isImage) {
+        console.log("Not an image file extension/type. Skipping.");
+        return;
+      }
+      await processAndUploadFile(file);
+      return;
+    }
+
+    // 2. Handle external web image drops (e.g. from Pinterest or Google Images)
+    let url = "";
+    const html = e.dataTransfer.getData("text/html");
+    if (html) {
+      console.log("HTML dragged:", html);
+      const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+      if (match && match[1]) {
+        // Decode HTML entities just in case (e.g. &amp; -> &)
+        url = match[1].replace(/&amp;/g, "&");
+        console.log("Found image URL from HTML drag:", url);
+      }
+    }
+
+    if (!url) {
+      url = e.dataTransfer.getData("text/uri-list") || e.dataTransfer.getData("URL");
+      console.log("Fallback URL from uri-list/URL:", url);
+    }
+
+    if (url) {
+      await processAndUploadUrl(url);
+    } else {
+      console.log("No valid file or image URL detected in drop.");
+    }
+  };
+
   return (
-    <div className="relative h-[37.5rem] bg-muted/50 overflow-hidden col-span-2 w-full max-w-4xl flex items-center justify-center rounded-lg border-2 border-dashed border-border p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
-      
+    <div
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      onClick={() => {
+        setActiveId(null);
+        setTarget(null);
+      }}
+      className={cn(
+        "relative h-[45rem] overflow-hidden col-span-2 w-full max-w-4xl flex items-center justify-center rounded-lg border-2 border-dashed p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all duration-300",
+        isDragOverCanvas
+          ? "border-brand-primary bg-brand-primary/10 scale-[1.01] shadow-lg shadow-brand-primary/5"
+          : "border-border bg-muted/50",
+      )}
+    >
+      {/* Floating Toolbar fixed at the top of the canvas, not rotating with the image */}
+      {activeId && (
+        <div className="absolute top-6 right-6 z-[60]">
+          {images.map((img, index) => {
+            if (img.id !== activeId) return null;
+            return (
+              <ImageToolbar
+                key={img.id}
+                layer={img}
+                layerCount={images.length}
+                layerIndex={index}
+                onUpdate={(updates) => updateLayer(img.id, updates)}
+                onReorder={(dir) => reorderLayer(img.id, dir)}
+                onDelete={() => {
+                  const filtered = images.filter((i) => i.id !== img.id);
+                  setImages(filtered);
+                  setActiveId(filtered[0]?.id || null);
+                }}
+              />
+            );
+          })}
+        </div>
+      )}
+
       {/* Hidden file input */}
       <input
         type="file"
@@ -125,13 +381,13 @@ export default function DesignConfig({
           {isUploadingLayer ? (
             <LuLoader className="size-5 animate-spin text-current" />
           ) : (
-             <LuImagePlus className="size-5 text-current" />
+            <LuImagePlus className="size-5 text-current" />
           )}
         </button>
       </div>
 
       {/* Phone Case Canvas Overlay */}
-      <div 
+      <div
         className="relative w-60 bg-opacity-50 pointer-events-none"
         style={{ aspectRatio: aspect }}
       >
@@ -147,14 +403,28 @@ export default function DesignConfig({
         </AspectRatio>
 
         {/* Clip mask */}
-        <div className={cn("absolute inset-0 z-40 left-[3px] top-px right-[3px] bottom-px shadow-[0_0_0_99999px_rgba(229,231,235,0.3)] dark:shadow-[0_0_0_99999px_rgba(10,10,15,0.5)]", radiusClass)} />
+        <div
+          className={cn(
+            "absolute inset-0 z-40 shadow-[0_0_0_99999px_rgba(250,250,250,1)] dark:shadow-[0_0_0_99999px_rgba(24,24,27,1)]",
+            offsetClass,
+            radiusClass,
+          )}
+        />
 
         {/* Dynamic color background */}
         <div
           className={cn(
-            "absolute inset-0 left-[3px] top-px right-[3px] bottom-px transition-colors duration-300",
+            "absolute transition-colors duration-300",
+            model.value === "iphone16" ||
+              model.value === "iphone16pro" ||
+              model.value === "iphone16promax"
+              ? "left-[4px] top-[3px] right-[4px] bottom-[3px] rounded-[20px]"
+              : model.value === "iphone17pro"
+                ? "left-[5px] top-[3px] right-[5px] bottom-[4px] rounded-[20px]"
+                : model.brand === "Google"
+                  ? "left-[7px] top-[7px] right-[7px] bottom-[5px] rounded-[20px]"
+                  : cn("inset-0", offsetClass, radiusClass),
             color.bgClass,
-            radiusClass
           )}
         />
       </div>
@@ -163,85 +433,158 @@ export default function DesignConfig({
       {images.map((img) => {
         const isActive = activeId === img.id;
         return (
-          <Rnd
+          <div
             key={img.id}
-            size={{
-              width: img.renderedWidth,
-              height: img.renderedHeight,
+            ref={(el) => {
+              if (isActive) {
+                setTarget(el);
+              }
             }}
-            position={{
-              x: img.x,
-              y: img.y,
-            }}
-            onDragStart={() => setActiveId(img.id)}
-            onDragStop={(_, data) => {
-              setImages((prev) =>
-                prev.map((i) =>
-                  i.id === img.id ? { ...i, x: data.x, y: data.y } : i
-                )
-              );
-            }}
-            onResizeStart={() => setActiveId(img.id)}
-            onResizeStop={(_, __, ref, ___, position) => {
-              setImages((prev) =>
-                prev.map((i) =>
-                  i.id === img.id
-                    ? {
-                        ...i,
-                        renderedWidth: parseInt(ref.style.width),
-                        renderedHeight: parseInt(ref.style.height),
-                        x: position.x,
-                        y: position.y,
-                      }
-                    : i
-                )
-              );
-            }}
-            onClick={() => setActiveId(img.id)}
-            lockAspectRatio
             className={cn(
-              "absolute z-30 pointer-events-auto cursor-grab active:cursor-grabbing border-2",
-              isActive ? "border-brand-primary" : "border-transparent hover:border-brand-primary/40"
-            )}
-            resizeHandleClasses={
+              "absolute pointer-events-auto cursor-grab active:cursor-grabbing border-2",
               isActive
-                ? {
-                    bottomRight: "w-4 h-4 bg-white border border-brand-primary rounded-full absolute -right-2 -bottom-2 cursor-se-resize shadow-sm flex items-center justify-center z-50",
-                    bottomLeft: "w-4 h-4 bg-white border border-brand-primary rounded-full absolute -left-2 -bottom-2 cursor-sw-resize shadow-sm z-50",
-                    topRight: "w-4 h-4 bg-white border border-brand-primary rounded-full absolute -right-2 -top-2 cursor-ne-resize shadow-sm z-50",
-                    topLeft: "w-4 h-4 bg-white border border-brand-primary rounded-full absolute -left-2 -top-2 cursor-nw-resize shadow-sm z-50",
-                  }
-                : {}
-            }
+                ? "border-brand-primary z-[43]"
+                : "border-transparent hover:border-brand-primary/40 z-[42]",
+            )}
+            style={{
+              left: `${img.x}px`,
+              top: `${img.y}px`,
+              width: `${img.renderedWidth}px`,
+              height: `${img.renderedHeight}px`,
+              transform: `rotate(${img.rotation}deg)`,
+              opacity: img.opacity,
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setActiveId(img.id);
+            }}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              setContextMenu({
+                x: e.clientX,
+                y: e.clientY,
+                layerId: img.id,
+              });
+              setActiveId(img.id);
+            }}
+            onMouseDown={(e) => {
+              if (e.button === 0) startLongPress(e, img.id);
+            }}
+            onTouchStart={(e) => startLongPress(e, img.id)}
+            onMouseUp={cancelLongPress}
+            onMouseMove={cancelLongPress}
+            onTouchEnd={cancelLongPress}
+            onTouchMove={cancelLongPress}
           >
             <div className="relative w-full h-full group">
-              <Image
-                fill
-                src={img.url}
+              <img
+                src={toggleBackgroundRemoval(img.url, img.removeBg)}
                 alt="custom design layer"
-                className="object-cover pointer-events-none select-none"
-                unoptimized
+                className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+                style={{
+                  transform: `scaleX(${img.flipH ? -1 : 1}) scaleY(${img.flipV ? -1 : 1})`,
+                }}
               />
-              
-              {/* Sleek Delete Button on active layer */}
-              {isActive && images.length > 1 && (
-                <button
-                  onMouseDown={(e) => {
-                    e.stopPropagation();
-                    const filtered = images.filter((i) => i.id !== img.id);
-                    setImages(filtered);
-                    setActiveId(filtered[0]?.id || null);
-                  }}
-                  className="absolute -top-2 -left-2 size-5 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center text-[10px] font-bold shadow-sm z-50 cursor-pointer"
-                  title="Remove image"
-                >
-                  ✕
-                </button>
-              )}
             </div>
-          </Rnd>
+          </div>
         );
       })}
+
+      {/* Moveable overlay handles for high-performance canvas manipulation */}
+      {target && activeId && (
+        <Moveable
+          ref={moveableRef}
+          target={target}
+          draggable={true}
+          resizable={true}
+          rotatable={true}
+          keepRatio={true}
+          throttleResize={1}
+          throttleDrag={1}
+          throttleRotate={1}
+          onDrag={({ target, left, top }) => {
+            target.style.left = `${left}px`;
+            target.style.top = `${top}px`;
+          }}
+          onDragEnd={({ target }) => {
+            updateLayer(activeId, {
+              x: parseFloat(target.style.left) || 0,
+              y: parseFloat(target.style.top) || 0,
+            });
+          }}
+          onResize={({ target, width, height, drag }) => {
+            target.style.width = `${width}px`;
+            target.style.height = `${height}px`;
+            target.style.left = `${drag.left}px`;
+            target.style.top = `${drag.top}px`;
+          }}
+          onResizeEnd={({ target }) => {
+            updateLayer(activeId, {
+              renderedWidth: parseFloat(target.style.width) || 0,
+              renderedHeight: parseFloat(target.style.height) || 0,
+              x: parseFloat(target.style.left) || 0,
+              y: parseFloat(target.style.top) || 0,
+            });
+          }}
+          onRotate={({ target, transform }) => {
+            target.style.transform = transform;
+          }}
+          onRotateEnd={({ target }) => {
+            const transformStr = target.style.transform;
+            const match = transformStr.match(/rotate\(([-\d.]+)deg\)/);
+            const rotation = match ? parseFloat(match[1]) : 0;
+            updateLayer(activeId, {
+              rotation: (rotation + 360) % 360,
+            });
+          }}
+        />
+      )}
+
+      {/* Sleek context menu overlay on right-click / long-press */}
+      {contextMenu && (
+        <div
+          className="fixed z-[999] bg-zinc-950/95 dark:bg-zinc-900/95 backdrop-blur border border-zinc-800 rounded-md shadow-2xl py-1.5 w-48 text-left transition-all select-none"
+          style={{
+            left: `${contextMenu.x}px`,
+            top: `${contextMenu.y}px`,
+          }}
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            onClick={() => {
+              reorderLayer(contextMenu.layerId, "up");
+              setContextMenu(null);
+            }}
+            className="w-full px-3.5 py-2 text-sm text-zinc-200 hover:bg-zinc-800 hover:text-white flex items-center gap-2 cursor-pointer transition-colors"
+          >
+            <LuChevronUp className="size-4" /> Bring to Front
+          </button>
+          <button
+            onClick={() => {
+              reorderLayer(contextMenu.layerId, "down");
+              setContextMenu(null);
+            }}
+            className="w-full px-3.5 py-2 text-sm text-zinc-200 hover:bg-zinc-800 hover:text-white flex items-center gap-2 cursor-pointer transition-colors"
+          >
+            <LuChevronDown className="size-4" /> Send to Back
+          </button>
+          <div className="border-t border-zinc-800 my-1" />
+          <button
+            onClick={() => {
+              const filtered = images.filter(
+                (i) => i.id !== contextMenu.layerId,
+              );
+              setImages(filtered);
+              setActiveId(filtered[0]?.id || null);
+              setContextMenu(null);
+            }}
+            className="w-full px-3.5 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 flex items-center gap-2 cursor-pointer transition-colors"
+          >
+            <LuTrash2 className="size-4" /> Delete Layer
+          </button>
+        </div>
+      )}
     </div>
   );
 }

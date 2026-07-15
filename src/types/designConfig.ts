@@ -13,6 +13,11 @@ export type ImageLayer = {
   y: number;
   renderedWidth: number;
   renderedHeight: number;
+  rotation: number;
+  flipH: boolean;
+  flipV: boolean;
+  opacity: number;
+  removeBg: boolean;
 };
 
 export type SaveConfigParams = {

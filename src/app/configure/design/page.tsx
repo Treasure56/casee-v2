@@ -42,6 +42,11 @@ function DesignWorkspace() {
       y: 150,
       renderedWidth: width / 4,
       renderedHeight: height / 4,
+      rotation: 0,
+      flipH: false,
+      flipV: false,
+      opacity: 1,
+      removeBg: false,
     },
   ]);
 
