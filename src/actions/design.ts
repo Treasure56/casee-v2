@@ -68,3 +68,31 @@ export async function saveDesignConfigAction(params: SaveConfigParams) {
     };
   }
 }
+
+export async function getDesignConfigAction(configId: string) {
+  await dbConnect();
+  try {
+    const config = await Configuration.findById(configId).lean();
+    if (!config) {
+      return { error: "Configuration not found" };
+    }
+
+    return {
+      success: true,
+      config: {
+        id: config._id.toString(),
+        imageUrl: config.imageUrl,
+        width: config.width,
+        height: config.height,
+        color: config.color,
+        model: config.phoneModel,
+        material: config.material,
+        finish: config.finish,
+        images: config.images ? JSON.parse(JSON.stringify(config.images)) : [],
+      },
+    };
+  } catch (error) {
+    console.error("Get design config error:", error);
+    return { error: "Failed to load configuration from database." };
+  }
+}

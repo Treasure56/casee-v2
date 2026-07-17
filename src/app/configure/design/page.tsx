@@ -1,12 +1,11 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, Suspense } from "react";
+import { useEffect, Suspense } from "react";
 import DesignConfig from "./DesignConfig";
 import DesignFeatures from "./DesignFeatures";
-import { colors, models, material, finishes } from "@/validators/optionValidators";
-import { saveDesignConfigAction } from "@/actions/design";
-import { ImageLayer } from "@/types/designConfig";
+import { useDesignStore } from "@/store/useDesignStore";
+import { saveDesignConfigAction, getDesignConfigAction } from "@/actions/design";
 
 function DesignWorkspace() {
   const searchParams = useSearchParams();
@@ -17,42 +16,45 @@ function DesignWorkspace() {
   const height = parseInt(searchParams.get("height") || "600");
   const configId = searchParams.get("id") || "";
 
-  // 1. Shared Options State
-  const [selectedColor, setSelectedColor] = useState<(typeof colors)[number]>(
-    colors[0]
-  );
-  const [selectedModel, setSelectedModel] = useState<(typeof models.options)[number]>(
-    models.options[0]
-  );
-  const [selectedMaterial, setSelectedMaterial] = useState<
-    (typeof material.options)[number]
-  >(material.options[0]);
-  const [selectedFinish, setSelectedFinish] = useState<
-    (typeof finishes.options)[number]
-  >(finishes.options[0]);
+  // Seed the store with URL params on mount
+  const initFromParams = useDesignStore((s) => s.initFromParams);
+  const loadSavedConfig = useDesignStore((s) => s.loadSavedConfig);
 
-  // 2. Shared Multiple Image Layers State
-  const [images, setImages] = useState<ImageLayer[]>([
-    {
-      id: "base",
-      url: imageUrl,
-      width,
-      height,
-      x: 150,
-      y: 150,
-      renderedWidth: width / 4,
-      renderedHeight: height / 4,
-      rotation: 0,
-      flipH: false,
-      flipV: false,
-      opacity: 1,
-      removeBg: false,
-    },
-  ]);
+  useEffect(() => {
+    if (configId) {
+      const restoreConfig = async () => {
+        try {
+          const res = await getDesignConfigAction(configId);
+          if (res.success && res.config) {
+            loadSavedConfig(res.config);
+          } else {
+            initFromParams({ configId, imageUrl, width, height });
+          }
+        } catch {
+          initFromParams({ configId, imageUrl, width, height });
+        }
+      };
+      restoreConfig();
+    } else {
+      initFromParams({ configId, imageUrl, width, height });
+    }
+  }, [configId, imageUrl, width, height, initFromParams, loadSavedConfig]);
 
-  const [isSaving, setIsSaving] = useState(false);
+  // ── Save handler ──
+
+  const isSaving = useDesignStore((s) => s.isSaving);
+  const setIsSaving = useDesignStore((s) => s.setIsSaving);
+  const clearPersistedState = useDesignStore((s) => s.clearPersistedState);
 
   const handleContinue = async () => {
+    const {
+      images,
+      selectedColor,
+      selectedModel,
+      selectedMaterial,
+      selectedFinish,
+    } = useDesignStore.getState();
+
     setIsSaving(true);
     try {
       const result = await saveDesignConfigAction({
@@ -68,6 +70,7 @@ function DesignWorkspace() {
       });
 
       if (result.success && result.configId) {
+        clearPersistedState();
         router.push(`/configure/preview?id=${result.configId}`);
       } else {
         alert(result.error || "Failed to save configuration");
@@ -82,31 +85,17 @@ function DesignWorkspace() {
 
   return (
     <div className="grid grid-cols-3 gap-6 py-6 app-container">
-      <DesignConfig
-        images={images}
-        setImages={setImages}
-        color={selectedColor}
-        model={selectedModel}
-      />
-      <DesignFeatures
-        selectedColor={selectedColor}
-        setSelectedColor={setSelectedColor}
-        selectedModel={selectedModel}
-        setSelectedModel={setSelectedModel}
-        selectedMaterial={selectedMaterial}
-        setSelectedMaterial={setSelectedMaterial}
-        selectedFinish={selectedFinish}
-        setSelectedFinish={setSelectedFinish}
-        onSave={handleContinue}
-        isSaving={isSaving}
-      />
+      <DesignConfig />
+      <DesignFeatures onSave={handleContinue} isSaving={isSaving} />
     </div>
   );
 }
 
 export default function Page() {
   return (
-    <Suspense fallback={<div className="py-24 text-center">Loading designer...</div>}>
+    <Suspense
+      fallback={<div className="py-24 text-center">Loading designer...</div>}
+    >
       <DesignWorkspace />
     </Suspense>
   );

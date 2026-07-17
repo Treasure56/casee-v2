@@ -7,6 +7,7 @@ export type DesignedCaseProps = {
 };
 
 export type CaseDetailsProps = {
+  configId: string;
   colorValue: string;
   modelValue: string;
   materialValue: string;

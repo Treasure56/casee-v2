@@ -4,6 +4,22 @@ import { cn } from "@/lib/utils";
 import { DesignedCaseProps } from "@/types/preview";
 import Image from "next/image";
 
+const toggleBackgroundRemoval = (url: string, removeBg: boolean): string => {
+  if (!url || !url.includes("cloudinary")) return url;
+
+  // Remove existing background removal transformation
+  let cleanUrl = url.replace(/\/e_background_removal\//, "/");
+
+  if (removeBg) {
+    // Add Cloudinary's AI background removal effect
+    cleanUrl = cleanUrl.replace("/upload/", "/upload/e_background_removal/");
+    // Convert format to .png to ensure transparent alpha channel is supported
+    cleanUrl = cleanUrl.replace(/\.[a-zA-Z0-9]+$/, ".png");
+  }
+
+  return cleanUrl;
+};
+
 export default function DesignedCase({
   images,
   colorValue,
@@ -45,7 +61,7 @@ export default function DesignedCase({
     <div className="relative h-[37.5rem] w-full bg-muted/50 overflow-hidden flex items-center justify-center rounded-lg border border-border">
       {/* Phone Case Canvas Overlay */}
       <div
-        className="relative w-60 bg-opacity-50 pointer-events-none z-40"
+        className="relative w-60 bg-opacity-50 pointer-events-none"
         style={{ aspectRatio: aspect }}
       >
         <AspectRatio
@@ -62,7 +78,7 @@ export default function DesignedCase({
         {/* Clip mask (hides parts of custom images bleeding outside the phone boundaries) */}
         <div
           className={cn(
-            "absolute inset-0 z-40 shadow-[0_0_0_99999px_var(--background)]",
+            "absolute inset-0 z-45 shadow-[0_0_0_99999px_var(--background)]",
             offsetClass,
             radiusClass,
           )}
@@ -71,7 +87,7 @@ export default function DesignedCase({
         {/* Dynamic color background */}
         <div
           className={cn(
-            "absolute transition-colors duration-300 -z-10",
+            "absolute transition-colors duration-300",
             (modelObj.value === "iphone16" || modelObj.value === "iphone16pro" || modelObj.value === "iphone16promax")
               ? "left-[4px] top-[3px] right-[4px] bottom-[3px] rounded-[20px]"
               : modelObj.value === "iphone17pro"
@@ -82,31 +98,34 @@ export default function DesignedCase({
             colorObj.bgClass,
           )}
         />
-      </div>
 
-      {/* Render all custom image layers positioned exactly as user configured */}
-      {images.map((img) => (
-        <div
-          key={img.id}
-          className="absolute z-30 pointer-events-none"
-          style={{
-            left: img.x,
-            top: img.y,
-            width: img.renderedWidth,
-            height: img.renderedHeight,
-          }}
-        >
-          <div className="relative w-full h-full">
-            <Image
-              fill
-              src={img.url}
-              alt="custom design layer"
-              className="object-cover pointer-events-none select-none"
-              unoptimized
-            />
+        {/* Render all custom image layers positioned exactly as user configured */}
+        {images.map((img) => (
+          <div
+            key={img.id}
+            className="absolute z-[42] pointer-events-none"
+            style={{
+              left: img.x,
+              top: img.y,
+              width: img.renderedWidth,
+              height: img.renderedHeight,
+              transform: `rotate(${img.rotation}deg)`,
+              opacity: img.opacity,
+            }}
+          >
+            <div className="relative w-full h-full">
+              <img
+                src={toggleBackgroundRemoval(img.url, img.removeBg)}
+                alt="custom design layer"
+                className="object-cover pointer-events-none select-none w-full h-full absolute inset-0"
+                style={{
+                  transform: `scaleX(${img.flipH ? -1 : 1}) scaleY(${img.flipV ? -1 : 1})`,
+                }}
+              />
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,10 +1,7 @@
 "use client";
 
-import { colors } from "@/validators/optionValidators";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
-
-import { Rnd } from "react-rnd";
 import { useState, useRef, useEffect } from "react";
 import { ImageLayer } from "@/types/designConfig";
 import {
@@ -13,42 +10,44 @@ import {
   LuChevronUp,
   LuChevronDown,
   LuTrash2,
+  LuSparkles,
 } from "react-icons/lu";
 import ImageToolbar from "./ImageToolbar";
-
-import { models } from "@/validators/optionValidators";
-
 import Moveable from "react-moveable";
+import { useDesignStore } from "@/store/useDesignStore";
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const toggleBackgroundRemoval = (url: string, removeBg: boolean): string => {
   if (!url || !url.includes("cloudinary")) return url;
-  
+
   // Remove existing background removal transformation
   let cleanUrl = url.replace(/\/e_background_removal\//, "/");
-  
+
   if (removeBg) {
     // Add Cloudinary's AI background removal effect
     cleanUrl = cleanUrl.replace("/upload/", "/upload/e_background_removal/");
     // Convert format to .png to ensure transparent alpha channel is supported
     cleanUrl = cleanUrl.replace(/\.[a-zA-Z0-9]+$/, ".png");
   }
-  
+
   return cleanUrl;
 };
 
-type DesignConfigProps = {
-  images: ImageLayer[];
-  setImages: React.Dispatch<React.SetStateAction<ImageLayer[]>>;
-  color: (typeof colors)[number];
-  model: (typeof models.options)[number];
-};
+// ─── Component ───────────────────────────────────────────────────────────────
 
-export default function DesignConfig({
-  images,
-  setImages,
-  color,
-  model,
-}: DesignConfigProps) {
+export default function DesignConfig() {
+  // ── Zustand store (granular selectors for performance) ──
+  const images = useDesignStore((s) => s.images);
+  const color = useDesignStore((s) => s.selectedColor);
+  const model = useDesignStore((s) => s.selectedModel);
+  const setImages = useDesignStore((s) => s.setImages);
+  const addLayer = useDesignStore((s) => s.addLayer);
+  const updateLayer = useDesignStore((s) => s.updateLayer);
+  const removeLayer = useDesignStore((s) => s.removeLayer);
+  const reorderLayer = useDesignStore((s) => s.reorderLayer);
+
+  // ── Local UI state (not persisted — transient) ──
   const [activeId, setActiveId] = useState<string | null>(
     images[0]?.id || null,
   );
@@ -63,11 +62,14 @@ export default function DesignConfig({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploadingLayer, setIsUploadingLayer] = useState(false);
 
+
+
+  // ── Long-press gesture handlers ──
+
   const startLongPress = (
     e: React.MouseEvent | React.TouchEvent,
     layerId: string,
   ) => {
-    // Determine pointer coordinates
     const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
     const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
 
@@ -78,7 +80,7 @@ export default function DesignConfig({
         layerId,
       });
       setActiveId(layerId);
-    }, 600); // 600ms long press
+    }, 600);
   };
 
   const cancelLongPress = () => {
@@ -87,6 +89,7 @@ export default function DesignConfig({
     }
   };
 
+  // Close context menu on any click
   useEffect(() => {
     const handleClose = () => setContextMenu(null);
     window.addEventListener("click", handleClose);
@@ -103,27 +106,7 @@ export default function DesignConfig({
     }
   }, [images, target]);
 
-  /** Update specific properties of a single image layer */
-  const updateLayer = (id: string, updates: Partial<ImageLayer>) => {
-    setImages((prev) =>
-      prev.map((img) => (img.id === id ? { ...img, ...updates } : img)),
-    );
-  };
-
-  /** Swap layer order: "up" moves toward end (renders on top), "down" moves toward start */
-  const reorderLayer = (id: string, direction: "up" | "down") => {
-    setImages((prev) => {
-      const index = prev.findIndex((img) => img.id === id);
-      if (index === -1) return prev;
-
-      const swapIndex = direction === "up" ? index + 1 : index - 1;
-      if (swapIndex < 0 || swapIndex >= prev.length) return prev;
-
-      const next = [...prev];
-      [next[index], next[swapIndex]] = [next[swapIndex], next[index]];
-      return next;
-    });
-  };
+  // ── Phone template config derived from model ──
 
   let templateSrc = "/images/phone-template.png";
   let aspect = 896 / 1831;
@@ -145,7 +128,7 @@ export default function DesignConfig({
     radiusClass = "rounded-[24px]";
     offsetClass = "left-[4px] top-[2px] right-[4px] bottom-[3px]";
   } else if (model.brand === "Google") {
-    templateSrc = "/images/phone-templates/pixel.png?v=28"; // Increment version for cache busting
+    templateSrc = "/images/phone-templates/pixel.png?v=28";
     aspect = 291 / 607;
     radiusClass = "rounded-[24px]";
     offsetClass = "left-[6px] top-[6px] right-[6px] bottom-[5px]";
@@ -155,6 +138,8 @@ export default function DesignConfig({
     radiusClass = "rounded-[6px]";
     offsetClass = "left-[3px] top-px right-[3px] bottom-px";
   }
+
+  // ── Upload handlers ──
 
   const handleAddImageClick = () => {
     fileInputRef.current?.click();
@@ -195,8 +180,8 @@ export default function DesignConfig({
             url: data.imageUrl,
             width,
             height,
-            x: Math.min(150 + images.length * 15, 200),
-            y: Math.min(150 + images.length * 15, 200),
+            x: Math.max(10, Math.round((240 - width / 4) / 2)) + (images.length * 10) % 50,
+            y: Math.max(10, Math.round((490 - height / 4) / 2)) + (images.length * 10) % 50,
             renderedWidth: width / 4,
             renderedHeight: height / 4,
             rotation: 0,
@@ -206,7 +191,7 @@ export default function DesignConfig({
             removeBg: false,
           };
 
-          setImages((prev) => [...prev, newLayer]);
+          addLayer(newLayer);
           setActiveId(newLayer.id);
         } catch (err) {
           alert("Failed to upload image. Please try again.");
@@ -242,8 +227,8 @@ export default function DesignConfig({
         url: data.imageUrl,
         width,
         height,
-        x: Math.min(150 + images.length * 15, 200),
-        y: Math.min(150 + images.length * 15, 200),
+        x: Math.max(10, Math.round((240 - width / 4) / 2)) + (images.length * 10) % 50,
+        y: Math.max(10, Math.round((490 - height / 4) / 2)) + (images.length * 10) % 50,
         renderedWidth: width / 4,
         renderedHeight: height / 4,
         rotation: 0,
@@ -253,7 +238,7 @@ export default function DesignConfig({
         removeBg: false,
       };
 
-      setImages((prev) => [...prev, newLayer]);
+      addLayer(newLayer);
       setActiveId(newLayer.id);
     } catch (err) {
       alert("Failed to import external image. Please try again.");
@@ -281,17 +266,13 @@ export default function DesignConfig({
     e.preventDefault();
     setIsDragOverCanvas(false);
 
-    console.log("--- DROP EVENT ---");
-    
     // 1. Handle local file drops (or browser-downloaded files)
     const file = e.dataTransfer.files?.[0];
     if (file) {
-      console.log("File dropped:", file.name, "MIME Type:", file.type);
-      const isImage = file.type.startsWith("image/") || /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i.test(file.name);
-      if (!isImage) {
-        console.log("Not an image file extension/type. Skipping.");
-        return;
-      }
+      const isImage =
+        file.type.startsWith("image/") ||
+        /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i.test(file.name);
+      if (!isImage) return;
       await processAndUploadFile(file);
       return;
     }
@@ -300,26 +281,24 @@ export default function DesignConfig({
     let url = "";
     const html = e.dataTransfer.getData("text/html");
     if (html) {
-      console.log("HTML dragged:", html);
       const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
       if (match && match[1]) {
-        // Decode HTML entities just in case (e.g. &amp; -> &)
         url = match[1].replace(/&amp;/g, "&");
-        console.log("Found image URL from HTML drag:", url);
       }
     }
 
     if (!url) {
-      url = e.dataTransfer.getData("text/uri-list") || e.dataTransfer.getData("URL");
-      console.log("Fallback URL from uri-list/URL:", url);
+      url =
+        e.dataTransfer.getData("text/uri-list") ||
+        e.dataTransfer.getData("URL");
     }
 
     if (url) {
       await processAndUploadUrl(url);
-    } else {
-      console.log("No valid file or image URL detected in drop.");
     }
   };
+
+  // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
     <div
@@ -351,9 +330,9 @@ export default function DesignConfig({
                 onUpdate={(updates) => updateLayer(img.id, updates)}
                 onReorder={(dir) => reorderLayer(img.id, dir)}
                 onDelete={() => {
-                  const filtered = images.filter((i) => i.id !== img.id);
-                  setImages(filtered);
-                  setActiveId(filtered[0]?.id || null);
+                  removeLayer(img.id);
+                  const remaining = images.filter((i) => i.id !== img.id);
+                  setActiveId(remaining[0]?.id || null);
                 }}
               />
             );
@@ -405,7 +384,7 @@ export default function DesignConfig({
         {/* Clip mask */}
         <div
           className={cn(
-            "absolute inset-0 z-40 shadow-[0_0_0_99999px_rgba(250,250,250,1)] dark:shadow-[0_0_0_99999px_rgba(24,24,27,1)]",
+            "absolute inset-0 z-[45] shadow-[0_0_0_99999px_rgba(250,250,250,1)] dark:shadow-[0_0_0_99999px_rgba(24,24,27,1)]",
             offsetClass,
             radiusClass,
           )}
@@ -427,68 +406,68 @@ export default function DesignConfig({
             color.bgClass,
           )}
         />
-      </div>
 
-      {/* Render all Draggable and Resizable Image Layers */}
-      {images.map((img) => {
-        const isActive = activeId === img.id;
-        return (
-          <div
-            key={img.id}
-            ref={(el) => {
-              if (isActive) {
-                setTarget(el);
-              }
-            }}
-            className={cn(
-              "absolute pointer-events-auto cursor-grab active:cursor-grabbing border-2",
-              isActive
-                ? "border-brand-primary z-[43]"
-                : "border-transparent hover:border-brand-primary/40 z-[42]",
-            )}
-            style={{
-              left: `${img.x}px`,
-              top: `${img.y}px`,
-              width: `${img.renderedWidth}px`,
-              height: `${img.renderedHeight}px`,
-              transform: `rotate(${img.rotation}deg)`,
-              opacity: img.opacity,
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              setActiveId(img.id);
-            }}
-            onContextMenu={(e) => {
-              e.preventDefault();
-              setContextMenu({
-                x: e.clientX,
-                y: e.clientY,
-                layerId: img.id,
-              });
-              setActiveId(img.id);
-            }}
-            onMouseDown={(e) => {
-              if (e.button === 0) startLongPress(e, img.id);
-            }}
-            onTouchStart={(e) => startLongPress(e, img.id)}
-            onMouseUp={cancelLongPress}
-            onMouseMove={cancelLongPress}
-            onTouchEnd={cancelLongPress}
-            onTouchMove={cancelLongPress}
-          >
-            <div className="relative w-full h-full group">
-              <img
-                src={toggleBackgroundRemoval(img.url, img.removeBg)}
-                alt="custom design layer"
-                className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
-                style={{
-                  transform: `scaleX(${img.flipH ? -1 : 1}) scaleY(${img.flipV ? -1 : 1})`,
-                }}
-              />
+        {/* Render all Draggable and Resizable Image Layers */}
+        {images.map((img) => {
+          const isActive = activeId === img.id;
+          return (
+            <div
+              key={img.id}
+              ref={(el) => {
+                if (isActive) {
+                  setTarget(el);
+                }
+              }}
+              className={cn(
+                "absolute pointer-events-auto cursor-grab active:cursor-grabbing border-2",
+                isActive
+                  ? "border-brand-primary z-[43]"
+                  : "border-transparent hover:border-brand-primary/40 z-[42]",
+              )}
+              style={{
+                left: `${img.x}px`,
+                top: `${img.y}px`,
+                width: `${img.renderedWidth}px`,
+                height: `${img.renderedHeight}px`,
+                transform: `rotate(${img.rotation}deg)`,
+                opacity: img.opacity,
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveId(img.id);
+              }}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                setContextMenu({
+                  x: e.clientX,
+                  y: e.clientY,
+                  layerId: img.id,
+                });
+                setActiveId(img.id);
+              }}
+              onMouseDown={(e) => {
+                if (e.button === 0) startLongPress(e, img.id);
+              }}
+              onTouchStart={(e) => startLongPress(e, img.id)}
+              onMouseUp={cancelLongPress}
+              onMouseMove={cancelLongPress}
+              onTouchEnd={cancelLongPress}
+              onTouchMove={cancelLongPress}
+            >
+              <div className="relative w-full h-full group overflow-hidden">
+                <img
+                  src={toggleBackgroundRemoval(img.url, img.removeBg)}
+                  alt="custom design layer"
+                  className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+                  style={{
+                    transform: `scaleX(${img.flipH ? -1 : 1}) scaleY(${img.flipV ? -1 : 1})`,
+                  }}
+                />
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
 
       {/* Moveable overlay handles for high-performance canvas manipulation */}
       {target && activeId && (
@@ -572,11 +551,11 @@ export default function DesignConfig({
           <div className="border-t border-zinc-800 my-1" />
           <button
             onClick={() => {
-              const filtered = images.filter(
+              removeLayer(contextMenu.layerId);
+              const remaining = images.filter(
                 (i) => i.id !== contextMenu.layerId,
               );
-              setImages(filtered);
-              setActiveId(filtered[0]?.id || null);
+              setActiveId(remaining[0]?.id || null);
               setContextMenu(null);
             }}
             className="w-full px-3.5 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 flex items-center gap-2 cursor-pointer transition-colors"

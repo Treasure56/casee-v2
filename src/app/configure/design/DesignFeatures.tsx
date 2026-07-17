@@ -22,32 +22,27 @@ import {
 import { formatPrice } from "@/functions/helpers";
 import FormButton from "@/components/form/FormButton";
 import { basePrice } from "@/data/product";
+import { useDesignStore } from "@/store/useDesignStore";
 
 type DesignFeaturesProps = {
-  selectedColor: (typeof colors)[number];
-  setSelectedColor: (color: (typeof colors)[number]) => void;
-  selectedModel: (typeof models.options)[number];
-  setSelectedModel: (model: (typeof models.options)[number]) => void;
-  selectedMaterial: (typeof material.options)[number];
-  setSelectedMaterial: (mtl: (typeof material.options)[number]) => void;
-  selectedFinish: (typeof finishes.options)[number];
-  setSelectedFinish: (finish: (typeof finishes.options)[number]) => void;
   onSave: () => void;
   isSaving: boolean;
 };
 
 export default function DesignFeatures({
-  selectedColor,
-  setSelectedColor,
-  selectedModel,
-  setSelectedModel,
-  selectedMaterial,
-  setSelectedMaterial,
-  selectedFinish,
-  setSelectedFinish,
   onSave,
   isSaving,
 }: DesignFeaturesProps) {
+  // ── Read from Zustand store via selectors ──
+  const selectedColor = useDesignStore((s) => s.selectedColor);
+  const setSelectedColor = useDesignStore((s) => s.setSelectedColor);
+  const selectedModel = useDesignStore((s) => s.selectedModel);
+  const setSelectedModel = useDesignStore((s) => s.setSelectedModel);
+  const selectedMaterial = useDesignStore((s) => s.selectedMaterial);
+  const setSelectedMaterial = useDesignStore((s) => s.setSelectedMaterial);
+  const selectedFinish = useDesignStore((s) => s.selectedFinish);
+  const setSelectedFinish = useDesignStore((s) => s.setSelectedFinish);
+
   const totalPrice = basePrice + selectedMaterial.price + selectedFinish.price;
 
   return (

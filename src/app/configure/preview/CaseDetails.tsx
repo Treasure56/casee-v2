@@ -9,6 +9,7 @@ import Confetti, { ConfettiConfig } from "react-dom-confetti";
 import { useEffect, useState } from "react";
 import { colors, models, material, finishes } from "@/validators/optionValidators";
 import { basePrice } from "@/data/product";
+import { useRouter } from "next/navigation";
 import { CaseDetailsProps } from "@/types/preview";
 
 const config = {
@@ -28,11 +29,13 @@ const config = {
 
 
 export default function CaseDetails({
+  configId,
   colorValue,
   modelValue,
   materialValue,
   finishValue,
 }: CaseDetailsProps) {
+  const router = useRouter();
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
   
   useEffect(() => {
@@ -91,10 +94,10 @@ export default function CaseDetails({
         </div>
         <CaseFeatures />
         <OrderSummary totalPrice={totalPrice} />
-        <div className="flex justify-end">
+        <div className="flex justify-end mt-6">
           <button 
             onClick={handleCheckout}
-            className="btn btn-primary !py-3 !rounded-md w-full md:w-auto cursor-pointer"
+            className="btn btn-primary !py-3 !rounded-md w-full md:w-auto cursor-pointer flex items-center justify-center gap-1.5"
           >
             Check Out
             <LuArrowRight />

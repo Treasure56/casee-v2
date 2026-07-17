@@ -9,6 +9,11 @@ export interface IDbImageLayer {
   y: number;
   renderedWidth: number;
   renderedHeight: number;
+  rotation?: number;
+  flipH?: boolean;
+  flipV?: boolean;
+  opacity?: number;
+  removeBg?: boolean;
 }
 
 export interface IConfiguration extends Document {
@@ -51,6 +56,11 @@ const ConfigurationSchema: Schema = new Schema(
         y: { type: Number, required: true },
         renderedWidth: { type: Number, required: true },
         renderedHeight: { type: Number, required: true },
+        rotation: { type: Number, default: 0 },
+        flipH: { type: Boolean, default: false },
+        flipV: { type: Boolean, default: false },
+        opacity: { type: Number, default: 1 },
+        removeBg: { type: Boolean, default: false },
       },
     ],
   },
