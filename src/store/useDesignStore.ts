@@ -8,6 +8,22 @@ import {
 } from "@/validators/optionValidators";
 import { ImageLayer } from "@/types/designConfig";
 
+// Helper to scale initial dimensions to fit canvas (max 150px)
+export const calculateInitialDimensions = (width: number, height: number) => {
+  const maxInitialDim = 150;
+  let renderedWidth = width / 4;
+  let renderedHeight = height / 4;
+
+  if (renderedWidth > maxInitialDim || renderedHeight > maxInitialDim) {
+    const ratio = Math.min(maxInitialDim / renderedWidth, maxInitialDim / renderedHeight);
+    renderedWidth = Math.round(renderedWidth * ratio);
+    renderedHeight = Math.round(renderedHeight * ratio);
+  }
+
+  return { renderedWidth, renderedHeight };
+};
+
+
 // ─── Derived Types ───────────────────────────────────────────────────────────
 
 type Color = (typeof colors)[number];
@@ -146,6 +162,7 @@ export const useDesignStore = create<DesignState & DesignActions>()(
         // Only seed the default base layer if store has no images
         // (this means nothing was restored from localStorage)
         if (state.images.length === 0) {
+          const { renderedWidth, renderedHeight } = calculateInitialDimensions(width, height);
           set({
             images: [
               {
@@ -153,10 +170,10 @@ export const useDesignStore = create<DesignState & DesignActions>()(
                 url: imageUrl,
                 width,
                 height,
-                x: Math.max(10, Math.round((240 - width / 4) / 2)),
-                y: Math.max(10, Math.round((490 - height / 4) / 2)),
-                renderedWidth: width / 4,
-                renderedHeight: height / 4,
+                x: Math.max(10, Math.round((240 - renderedWidth) / 2)),
+                y: Math.max(10, Math.round((490 - renderedHeight) / 2)),
+                renderedWidth,
+                renderedHeight,
                 rotation: 0,
                 flipH: false,
                 flipV: false,
@@ -202,22 +219,24 @@ export const useDesignStore = create<DesignState & DesignActions>()(
 
       resetLayerTransforms: (id) =>
         set((state) => ({
-          images: state.images.map((img) =>
-            img.id === id
-              ? {
-                  ...img,
-                  x: Math.max(10, Math.round((240 - img.width / 4) / 2)),
-                  y: Math.max(10, Math.round((490 - img.height / 4) / 2)),
-                  renderedWidth: img.width / 4,
-                  renderedHeight: img.height / 4,
-                  rotation: 0,
-                  flipH: false,
-                  flipV: false,
-                  opacity: 1,
-                  removeBg: false,
-                }
-              : img,
-          ),
+          images: state.images.map((img) => {
+            if (img.id === id) {
+              const { renderedWidth, renderedHeight } = calculateInitialDimensions(img.width, img.height);
+              return {
+                ...img,
+                x: Math.max(10, Math.round((240 - renderedWidth) / 2)),
+                y: Math.max(10, Math.round((490 - renderedHeight) / 2)),
+                renderedWidth,
+                renderedHeight,
+                rotation: 0,
+                flipH: false,
+                flipV: false,
+                opacity: 1,
+                removeBg: false,
+              };
+            }
+            return img;
+          }),
         })),
 
       // ── Sidebar Option Actions ──

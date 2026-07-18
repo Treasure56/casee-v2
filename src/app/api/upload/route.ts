@@ -26,6 +26,7 @@ export async function POST(request: Request) {
         uploadResult = await cloudinary.uploader.upload(url, {
           folder: "casee-custom-covers",
           resource_type: "auto",
+          transformation: [{ effect: "trim" }],
         });
       } else {
         // Regular web URL - fetch on server with custom browser headers to bypass CDN / bot protection blocks
@@ -50,6 +51,7 @@ export async function POST(request: Request) {
               {
                 folder: "casee-custom-covers",
                 resource_type: "auto",
+                transformation: [{ effect: "trim" }],
               },
               (error, result) => {
                 if (error) {
@@ -88,6 +90,7 @@ export async function POST(request: Request) {
           {
             folder: "casee-custom-covers",
             resource_type: "auto",
+            transformation: [{ effect: "trim" }],
           },
           (error, result) => {
             if (error) {

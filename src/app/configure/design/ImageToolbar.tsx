@@ -10,6 +10,7 @@ import {
   LuTrash2,
   LuSparkles,
 } from "react-icons/lu";
+import { calculateInitialDimensions } from "@/store/useDesignStore";
 
 type ImageToolbarProps = {
   layer: ImageLayer;
@@ -20,6 +21,7 @@ type ImageToolbarProps = {
   onUpdate: (updates: Partial<ImageLayer>) => void;
   onReorder: (direction: "up" | "down") => void;
   onDelete: () => void;
+  onReset: () => void;
 };
 
 /**
@@ -33,15 +35,18 @@ export default function ImageToolbar({
   onUpdate,
   onReorder,
   onDelete,
+  onReset,
 }: ImageToolbarProps) {
+  const { renderedWidth: defaultWidth } = calculateInitialDimensions(layer.width, layer.height);
   const hasTransforms =
     layer.rotation !== 0 ||
     layer.flipH ||
     layer.flipV ||
-    layer.opacity !== 1;
+    layer.opacity !== 1 ||
+    Math.round(layer.renderedWidth) !== Math.round(defaultWidth);
 
   const handleReset = () => {
-    onUpdate({ rotation: 0, flipH: false, flipV: false, opacity: 1 });
+    onReset();
   };
 
   return (

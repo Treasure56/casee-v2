@@ -62,7 +62,7 @@ export default function CaseDetails({
     <>
       <div
         aria-hidden
-        className="pointer-event-none select-none absolute inset-0 overflow-hidden flex justify-center"
+        className="pointer-events-none select-none absolute inset-0 overflow-hidden flex justify-center"
       >
         <Confetti active={showConfetti} config={config as ConfettiConfig} />
       </div>

@@ -2,46 +2,60 @@ import { productPrice } from "@/data/product";
 
 export const colors = [
   { 
-    label: "Black Titanium", 
+    label: "Charcoal Black", 
     value: "black-titanium", 
     tw: "zinc-900",
     bgClass: "!bg-zinc-900 dark:!bg-zinc-900",
     borderClass: "border-zinc-900"
   },
   { 
-    label: "Blue Titanium", 
+    label: "Alabaster White", 
+    value: "white-titanium", 
+    tw: "zinc-100",
+    bgClass: "!bg-zinc-100 dark:!bg-zinc-100",
+    borderClass: "border-zinc-300"
+  },
+  { 
+    label: "Midnight Blue", 
     value: "blue-titanium", 
     tw: "blue-950",
     bgClass: "!bg-blue-950 dark:!bg-blue-950",
     borderClass: "border-blue-950"
   },
   { 
-    label: "Natural Titanium", 
+    label: "Desert Sand", 
     value: "natural-titanium", 
-    tw: "stone-400",
-    bgClass: "!bg-stone-400 dark:!bg-stone-400",
+    tw: "stone-300",
+    bgClass: "!bg-stone-300 dark:!bg-stone-300",
     borderClass: "border-stone-400"
   },
   { 
-    label: "White Titanium", 
-    value: "white-titanium", 
-    tw: "gray-100",
-    bgClass: "!bg-gray-100 dark:!bg-gray-100",
-    borderClass: "border-gray-100"
-  },
-  { 
-    label: "Pink", 
+    label: "Dusty Rose", 
     value: "pink", 
-    tw: "rose-300",
-    bgClass: "!bg-rose-300 dark:!bg-rose-300",
+    tw: "rose-200",
+    bgClass: "!bg-rose-200 dark:!bg-rose-200",
     borderClass: "border-rose-300"
   },
   { 
-    label: "Yellow", 
-    value: "yellow", 
-    tw: "yellow-300",
-    bgClass: "!bg-yellow-300 dark:!bg-yellow-300",
-    borderClass: "border-yellow-300"
+    label: "Forest Green", 
+    value: "forest-green", 
+    tw: "emerald-900",
+    bgClass: "!bg-emerald-900 dark:!bg-emerald-900",
+    borderClass: "border-emerald-950"
+  },
+  { 
+    label: "Lilac Purple", 
+    value: "lilac-purple", 
+    tw: "violet-300",
+    bgClass: "!bg-violet-300 dark:!bg-violet-300",
+    borderClass: "border-violet-400"
+  },
+  { 
+    label: "Deep Burgundy", 
+    value: "deep-burgundy", 
+    tw: "red-900",
+    bgClass: "!bg-red-900 dark:!bg-red-900",
+    borderClass: "border-red-950"
   },
 ] as const;
 

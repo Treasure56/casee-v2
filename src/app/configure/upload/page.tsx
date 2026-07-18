@@ -67,9 +67,9 @@ export default function Upload() {
         clearInterval(progressInterval);
         setUploadProgress(100);
 
-        // Redirect to design page
+        // Redirect to design page using the trimmed dimensions from Cloudinary
         router.push(
-          `/configure/design?imageUrl=${encodeURIComponent(data.imageUrl)}&width=${width}&height=${height}`
+          `/configure/design?imageUrl=${encodeURIComponent(data.imageUrl)}&width=${data.width}&height=${data.height}`
         );
       } catch (err) {
         clearInterval(progressInterval);

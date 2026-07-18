@@ -14,7 +14,7 @@ import {
 } from "react-icons/lu";
 import ImageToolbar from "./ImageToolbar";
 import Moveable from "react-moveable";
-import { useDesignStore } from "@/store/useDesignStore";
+import { useDesignStore, calculateInitialDimensions } from "@/store/useDesignStore";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -46,6 +46,7 @@ export default function DesignConfig() {
   const updateLayer = useDesignStore((s) => s.updateLayer);
   const removeLayer = useDesignStore((s) => s.removeLayer);
   const reorderLayer = useDesignStore((s) => s.reorderLayer);
+  const resetLayerTransforms = useDesignStore((s) => s.resetLayerTransforms);
 
   // ── Local UI state (not persisted — transient) ──
   const [activeId, setActiveId] = useState<string | null>(
@@ -175,15 +176,19 @@ export default function DesignConfig() {
 
           const data = await response.json();
 
+          const finalWidth = data.width || width;
+          const finalHeight = data.height || height;
+
+          const { renderedWidth, renderedHeight } = calculateInitialDimensions(finalWidth, finalHeight);
           const newLayer: ImageLayer = {
             id: `layer-${Date.now()}`,
             url: data.imageUrl,
-            width,
-            height,
-            x: Math.max(10, Math.round((240 - width / 4) / 2)) + (images.length * 10) % 50,
-            y: Math.max(10, Math.round((490 - height / 4) / 2)) + (images.length * 10) % 50,
-            renderedWidth: width / 4,
-            renderedHeight: height / 4,
+            width: finalWidth,
+            height: finalHeight,
+            x: Math.max(10, Math.round((240 - renderedWidth) / 2)) + (images.length * 10) % 50,
+            y: Math.max(10, Math.round((490 - renderedHeight) / 2)) + (images.length * 10) % 50,
+            renderedWidth,
+            renderedHeight,
             rotation: 0,
             flipH: false,
             flipV: false,
@@ -222,15 +227,16 @@ export default function DesignConfig() {
       const width = data.width || 300;
       const height = data.height || 300;
 
+      const { renderedWidth, renderedHeight } = calculateInitialDimensions(width, height);
       const newLayer: ImageLayer = {
         id: `layer-${Date.now()}`,
         url: data.imageUrl,
         width,
         height,
-        x: Math.max(10, Math.round((240 - width / 4) / 2)) + (images.length * 10) % 50,
-        y: Math.max(10, Math.round((490 - height / 4) / 2)) + (images.length * 10) % 50,
-        renderedWidth: width / 4,
-        renderedHeight: height / 4,
+        x: Math.max(10, Math.round((240 - renderedWidth) / 2)) + (images.length * 10) % 50,
+        y: Math.max(10, Math.round((490 - renderedHeight) / 2)) + (images.length * 10) % 50,
+        renderedWidth,
+        renderedHeight,
         rotation: 0,
         flipH: false,
         flipV: false,
@@ -334,6 +340,7 @@ export default function DesignConfig() {
                   const remaining = images.filter((i) => i.id !== img.id);
                   setActiveId(remaining[0]?.id || null);
                 }}
+                onReset={() => resetLayerTransforms(img.id)}
               />
             );
           })}
@@ -421,8 +428,8 @@ export default function DesignConfig() {
               className={cn(
                 "absolute pointer-events-auto cursor-grab active:cursor-grabbing border-2",
                 isActive
-                  ? "border-brand-primary z-[43]"
-                  : "border-transparent hover:border-brand-primary/40 z-[42]",
+                  ? "border-brand-primary z-[47]"
+                  : "border-transparent hover:border-brand-primary/40 z-[46]",
               )}
               style={{
                 left: `${img.x}px`,
