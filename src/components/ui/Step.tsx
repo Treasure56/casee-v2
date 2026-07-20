@@ -3,11 +3,12 @@
 import { paths } from "@/utils/paths";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 const steps: Record<string, number> = {
   [paths.upload]: 1,
-  [paths.design]: 2,
-  [paths.preview]: 3,
+  [paths.design]: 1,
+  [paths.preview]: 2,
 };
 export default function Step() {
   const pathName = usePathname();
@@ -18,13 +19,22 @@ export default function Step() {
 
   return (
     <div className=" app-container py-12 flex md:flex-col md:gap-4 md:justify-center items-stretch w-full h-full flex-row-reverse">
-      <div className="grid md:grid-cols-3 md:gap-4 gap-8 flex-1 justify-center md:pl-8">
-        {stepContents.map((i) => (
-          <div key={i.name} className="flex flex-col text-start">
-            <p className="text-base text-foreground font-medium">{i.name}</p>
-            <p className="text-base text-muted-foreground">{i.description}</p>
-          </div>
-        ))}
+      <div className="grid md:grid-cols-2 md:gap-4 gap-8 flex-1 justify-center md:pl-8">
+        {stepContents.map((i, index) => {
+          const isCurrent = step === index + 1;
+          const isCompleted = step > index + 1;
+          return (
+            <div key={i.name} className="flex flex-col text-start">
+              <p className={cn(
+                "text-base font-semibold transition-colors",
+                isCurrent ? "text-brand-primary font-bold" : isCompleted ? "text-foreground" : "text-muted-foreground/60"
+              )}>
+                {i.name}
+              </p>
+              <p className="text-sm text-muted-foreground/80">{i.description}</p>
+            </div>
+          );
+        })}
       </div>
       <div className="md:w-full w-1 max-md:max-w-1.5 md:max-w-full relative rounded-md max-md:flex-1 md:h-1 bg-secondary flex-shrink-0 overflow-hidden">
         <div
@@ -47,11 +57,6 @@ export default function Step() {
 }
 
 const stepContents = [
-  {
-    name: " Add image",
-    description: "choose an image to your case",
-    url: "/upload",
-  },
   {
     name: " Customize design",
     description: "Make the case fit your needs",

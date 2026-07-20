@@ -45,7 +45,7 @@ export default async function Navbar() {
           )}
         </div>
         <ThemeToggle />
-        <Link href={paths.upload} className="btn btn-primary !px-6 !py-3 md:text-sm text-xs truncate ">
+        <Link href={paths.design} className="btn btn-primary !px-6 !py-3 md:text-sm text-xs truncate ">
           Create Case <LuArrowUpRight />
         </Link>
       </nav>

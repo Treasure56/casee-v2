@@ -69,7 +69,7 @@ export async function registerAction(
     };
   }
 
-  redirect("/configure/upload");
+  redirect("/configure/design");
 }
 
 // login action
@@ -115,7 +115,7 @@ export async function loginAction(
     };
   }
 
-  redirect("/configure/upload");
+  redirect("/configure/design");
 }
 
 // forgot password action step 1

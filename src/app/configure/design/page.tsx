@@ -11,7 +11,7 @@ function DesignWorkspace() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const imageUrl = searchParams.get("imageUrl") || "/images/user1.jpg";
+  const imageUrl = searchParams.get("imageUrl") || "";
   const width = parseInt(searchParams.get("width") || "300");
   const height = parseInt(searchParams.get("height") || "600");
   const configId = searchParams.get("id") || "";

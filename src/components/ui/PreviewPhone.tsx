@@ -10,32 +10,24 @@ export default function PhonePreview({
   color,
 }: {
   croppedImageUrl: string;
-  color: "blue" | "rose" | "zinc" | "black";
+  color: string;
 }) {
-  // const ref = useRef<HTMLImageElement>(null);
+  const colorMap: Record<string, string> = {
+    "black-titanium": "bg-zinc-900",
+    "zinc": "bg-zinc-900",
+    "black": "bg-zinc-900",
+    "white-titanium": "bg-zinc-100",
+    "blue-titanium": "bg-blue-950",
+    "blue": "bg-blue-950",
+    "natural-titanium": "bg-stone-300",
+    "pink": "bg-rose-200",
+    "rose": "bg-rose-200",
+    "forest-green": "bg-emerald-900",
+    "lilac-purple": "bg-violet-300",
+    "deep-burgundy": "bg-red-900",
+  };
 
-  // const [renderedDimensions, setRenderedDimensions] = useState({
-  //   height: 0,
-  //   width: 0,
-  // });
-
-  // const handleResize = () => {
-  //   if (!ref.current) return;
-  //   const { width, height } = ref.current.getBoundingClientRect();
-  //   setRenderedDimensions({ width, height });
-  // };
-
-  // useEffect(() => {
-  //   handleResize();
-
-  //   window.addEventListener("resize", handleResize);
-
-  //   return () => window.removeEventListener("resize", handleResize);
-  // }, [ref.current]);
-
-  let caseBackgroundColoor = "bg-zinc-950";
-  if (color === "blue") caseBackgroundColoor = "bg-blue-950";
-  if (color === "rose") caseBackgroundColoor = "bg-rose-950";
+  const caseBackgroundColoor = colorMap[color] || "bg-zinc-950";
   return (
     <AspectRatio
       ratio={3000 / 2001}

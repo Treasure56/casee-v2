@@ -54,8 +54,8 @@ export default function CaseDetails({
   const totalPrice = basePrice + materialObj.price + finishObj.price;
 
   const handleCheckout = () => {
-    // Redirect to thank-you success page
-    window.location.href = "/thank-you";
+    // Redirect to thank-you success page with configuration ID
+    window.location.href = `/thank-you?id=${configId}`;
   };
 
   return (

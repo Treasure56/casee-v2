@@ -19,6 +19,10 @@ export async function saveDesignConfigAction(params: SaveConfigParams) {
       renderedHeight: firstImg?.renderedHeight || 0,
     };
 
+    const legacyUrl = params.imageUrl || firstImg?.url || "/images/clearphone.png";
+    const legacyWidth = params.width || firstImg?.width || 300;
+    const legacyHeight = params.height || firstImg?.height || 600;
+
     if (
       params.configId &&
       params.configId !== "undefined" &&
@@ -28,6 +32,9 @@ export async function saveDesignConfigAction(params: SaveConfigParams) {
       config = await Configuration.findByIdAndUpdate(
         params.configId,
         {
+          imageUrl: legacyUrl,
+          width: legacyWidth,
+          height: legacyHeight,
           color: params.color,
           phoneModel: params.model,
           material: params.material,
@@ -39,9 +46,9 @@ export async function saveDesignConfigAction(params: SaveConfigParams) {
       );
     } else {
       config = await Configuration.create({
-        imageUrl: params.imageUrl,
-        width: params.width,
-        height: params.height,
+        imageUrl: legacyUrl,
+        width: legacyWidth,
+        height: legacyHeight,
         color: params.color,
         phoneModel: params.model,
         material: params.material,

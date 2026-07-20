@@ -159,9 +159,9 @@ export const useDesignStore = create<DesignState & DesignActions>()(
           baseHeight: height,
         });
 
-        // Only seed the default base layer if store has no images
+        // Only seed the default base layer if store has no images and imageUrl is provided
         // (this means nothing was restored from localStorage)
-        if (state.images.length === 0) {
+        if (state.images.length === 0 && imageUrl) {
           const { renderedWidth, renderedHeight } = calculateInitialDimensions(width, height);
           set({
             images: [

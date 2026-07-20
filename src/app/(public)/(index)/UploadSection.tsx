@@ -35,7 +35,7 @@ export default function UploadSection() {
         </ul>
 
         <div className="pt-4">
-          <Link href={paths.upload} className="btn btn-primary !px-6 !py-3">
+          <Link href={paths.design} className="btn btn-primary !px-6 !py-3">
             Get Started Now
           </Link>
         </div>
