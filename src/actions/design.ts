@@ -19,7 +19,7 @@ export async function saveDesignConfigAction(params: SaveConfigParams) {
       renderedHeight: firstImg?.renderedHeight || 0,
     };
 
-    const legacyUrl = params.imageUrl || firstImg?.url || "/images/clearphone.png";
+    const legacyUrl = params.imageUrl || firstImg?.url || "";
     const legacyWidth = params.width || firstImg?.width || 300;
     const legacyHeight = params.height || firstImg?.height || 600;
 

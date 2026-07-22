@@ -150,8 +150,8 @@ export const useDesignStore = create<DesignState & DesignActions>()(
 
       initFromParams: ({ configId, imageUrl, width, height }) => {
         const state = get();
+        const isNewImage = Boolean(imageUrl && imageUrl !== state.baseImageUrl);
 
-        // Always update URL-dependent params (they are not persisted)
         set({
           configId,
           baseImageUrl: imageUrl,
@@ -159,9 +159,8 @@ export const useDesignStore = create<DesignState & DesignActions>()(
           baseHeight: height,
         });
 
-        // Only seed the default base layer if store has no images and imageUrl is provided
-        // (this means nothing was restored from localStorage)
-        if (state.images.length === 0 && imageUrl) {
+        // Update or seed the base layer if a new imageUrl is passed or if store has no images
+        if (imageUrl && (isNewImage || state.images.length === 0)) {
           const { renderedWidth, renderedHeight } = calculateInitialDimensions(width, height);
           set({
             images: [
@@ -275,9 +274,11 @@ export const useDesignStore = create<DesignState & DesignActions>()(
 
       clearPersistedState: () => {
         const { configId } = get();
-        const key = `casee-design-${configId || "draft"}`;
         try {
-          localStorage.removeItem(key);
+          localStorage.removeItem("casee-design-draft");
+          if (configId) {
+            localStorage.removeItem(`casee-design-${configId}`);
+          }
         } catch {
           // silently ignore
         }
@@ -289,6 +290,8 @@ export const useDesignStore = create<DesignState & DesignActions>()(
           selectedMaterial: DEFAULT_MATERIAL,
           selectedFinish: DEFAULT_FINISH,
           isSaving: false,
+          configId: "",
+          baseImageUrl: "",
         });
       },
     }),

@@ -28,6 +28,11 @@ export default async function Page({ searchParams }: PageProps) {
     return notFound();
   }
 
+  const hasValidBaseImage =
+    Boolean(config.imageUrl) &&
+    config.imageUrl !== "/images/clearphone.png" &&
+    config.imageUrl.trim() !== "";
+
   // Parse images list with legacy fallback formatting
   const images: ImageLayer[] = (config.images && config.images.length > 0)
     ? JSON.parse(JSON.stringify(config.images)).map((img: any) => ({
@@ -45,7 +50,8 @@ export default async function Page({ searchParams }: PageProps) {
         opacity: img.opacity !== undefined ? img.opacity : 1,
         removeBg: img.removeBg || false,
       }))
-    : [
+    : hasValidBaseImage
+    ? [
         {
           id: "base",
           url: config.imageUrl,
@@ -61,7 +67,8 @@ export default async function Page({ searchParams }: PageProps) {
           opacity: 1,
           removeBg: false,
         },
-      ];
+      ]
+    : [];
 
   return (
     <div className="app-container py-12 flex flex-col gap-6">

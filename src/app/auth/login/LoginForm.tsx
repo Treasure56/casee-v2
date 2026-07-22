@@ -3,6 +3,7 @@
 import AppInput from "@/components/form/AppInput";
 import FormButton from "@/components/form/FormButton";
 import { FormMessage } from "@/components/form/FormMessage";
+import GoogleSignInButton from "@/components/form/GoogleSignInButton";
 import { useAppActionState } from "@/hooks/useAppActionState";
 import { paths } from "@/utils/paths";
 import Link from "next/link";
@@ -29,32 +30,42 @@ export default function LoginForm() {
   });
 
   return (
-    <form key={formKey} action={action} className="flex flex-col gap-4 w-full">
-      <FormMessage res={state} />
+    <div className="flex flex-col gap-4 w-full">
+      <form key={formKey} action={action} className="flex flex-col gap-4 w-full">
+        <FormMessage res={state} />
 
-      {formFields.map((field) => (
-        <AppInput
-          key={field.name}
-          {...field}
-          error={state?.fieldErrors?.[field.name]}
-        />
-      ))}
+        {formFields.map((field) => (
+          <AppInput
+            key={field.name}
+            {...field}
+            error={state?.fieldErrors?.[field.name]}
+          />
+        ))}
 
-      <FormButton type="submit" className="w-full btn btn-primary !py-3 !rounded-md">
-        Login
-      </FormButton>
+        <FormButton type="submit" className="w-full btn btn-primary !py-3 !rounded-md">
+          Login
+        </FormButton>
 
-      <div className="flex justify-between items-center text-sm">
-        <div className="flex gap-2">
-          <p>Don&apos;t have an account?</p>
-          <Link href={paths.register} className="text-brand-primary font-semibold">
-            Sign Up
+        <div className="flex justify-between items-center text-sm">
+          <div className="flex gap-2">
+            <p>Don&apos;t have an account?</p>
+            <Link href={paths.register} className="text-brand-primary font-semibold">
+              Sign Up
+            </Link>
+          </div>
+          <Link href={paths.forgotPassword} className="text-muted-foreground hover:text-foreground transition-colors">
+            Forgot Password?
           </Link>
         </div>
-        <Link href={paths.forgotPassword} className="text-muted-foreground hover:text-foreground transition-colors">
-          Forgot Password?
-        </Link>
+      </form>
+
+      <div className="flex items-center gap-3 my-1">
+        <div className="flex-1 h-px bg-border" />
+        <span className="text-xs text-muted-foreground">or</span>
+        <div className="flex-1 h-px bg-border" />
       </div>
-    </form>
+
+      <GoogleSignInButton />
+    </div>
   );
 }

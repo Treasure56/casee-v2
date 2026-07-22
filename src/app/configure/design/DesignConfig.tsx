@@ -116,28 +116,28 @@ export default function DesignConfig() {
 
   if (
     model.value === "iphone16" ||
-    model.value === "iphone16pro" ||
-    model.value === "iphone16promax"
+    model.value === "iphone16plus" ||
+    model.value === "iphone17"
   ) {
-    templateSrc = "/images/phone-templates/iphone16.png?v=1";
-    aspect = 172 / 357;
-    radiusClass = "rounded-[24px]";
-    offsetClass = "left-[3px] top-[2px] right-[3px] bottom-[2px]";
-  } else if (model.value === "iphone17pro") {
-    templateSrc = "/images/phone-templates/iphone17pro.png?v=37";
-    aspect = 196 / 404;
-    radiusClass = "rounded-[24px]";
-    offsetClass = "left-[4px] top-[2px] right-[4px] bottom-[3px]";
+    templateSrc = "/images/phone-templates/iphone16.png?v=999";
+    aspect = 307 / 653;
+    radiusClass = "rounded-[32px]";
+    offsetClass = "left-[5px] top-[4px] right-[5px] bottom-[4px]";
+  } else if (model.value === "iphone17pro" || model.value === "iphone17promax") {
+    templateSrc = "/images/phone-templates/iphone17pro.png?v=999";
+    aspect = 896 / 1754;
+    radiusClass = "rounded-[36px]";
+    offsetClass = "left-[14px] top-[20px] right-[17px] bottom-[24px]";
   } else if (model.brand === "Google") {
-    templateSrc = "/images/phone-templates/pixel.png?v=28";
-    aspect = 291 / 607;
-    radiusClass = "rounded-[24px]";
-    offsetClass = "left-[6px] top-[6px] right-[6px] bottom-[5px]";
+    templateSrc = "/images/phone-templates/pixel.png?v=999";
+    aspect = 925 / 1700;
+    radiusClass = "rounded-[42px]";
+    offsetClass = "left-[26px] top-[14px] right-[29px] bottom-[25px]";
   } else if (model.brand === "Samsung") {
-    templateSrc = "/images/phone-templates/samsung.png?v=14";
-    aspect = 214 / 437;
-    radiusClass = "rounded-[6px]";
-    offsetClass = "left-[3px] top-px right-[3px] bottom-px";
+    templateSrc = "/images/phone-templates/samsun_altra.png?v=999";
+    aspect = 940 / 1672;
+    radiusClass = "rounded-[14px]";
+    offsetClass = "left-[29px] top-[20px] right-[31px] bottom-[16px]";
   }
 
   // ── Upload handlers ──
@@ -374,7 +374,16 @@ export default function DesignConfig() {
 
       {/* Phone Case Canvas Overlay */}
       <div
-        className="relative w-60 bg-opacity-50 pointer-events-none"
+        className={cn(
+          "relative bg-opacity-50 pointer-events-none",
+          model.value === "iphone17pro" || model.value === "iphone17promax"
+            ? "w-[16.4rem]"
+            : model.brand === "Samsung"
+              ? "w-[18.1rem]"
+              : model.brand === "Google"
+                ? "w-[18rem]"
+                : "w-60",
+        )}
         style={{ aspectRatio: aspect }}
       >
         <AspectRatio
@@ -401,15 +410,8 @@ export default function DesignConfig() {
         <div
           className={cn(
             "absolute transition-colors duration-300",
-            model.value === "iphone16" ||
-              model.value === "iphone16pro" ||
-              model.value === "iphone16promax"
-              ? "left-[4px] top-[3px] right-[4px] bottom-[3px] rounded-[20px]"
-              : model.value === "iphone17pro"
-                ? "left-[5px] top-[3px] right-[5px] bottom-[4px] rounded-[20px]"
-                : model.brand === "Google"
-                  ? "left-[7px] top-[7px] right-[7px] bottom-[5px] rounded-[20px]"
-                  : cn("inset-0", offsetClass, radiusClass),
+            offsetClass,
+            radiusClass,
             color.bgClass,
           )}
         />

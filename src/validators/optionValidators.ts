@@ -70,6 +70,7 @@ export const models = {
     { label: "iPhone 15 Pro", value: "iphone15pro", brand: "Apple" },
     { label: "iPhone 15 Pro Max", value: "iphone15promax", brand: "Apple" },
     { label: "iPhone 16", value: "iphone16", brand: "Apple" },
+    { label: "iPhone 16 Plus", value: "iphone16plus", brand: "Apple" },
     { label: "iPhone 16 Pro", value: "iphone16pro", brand: "Apple" },
     { label: "iPhone 16 Pro Max", value: "iphone16promax", brand: "Apple" },
     { label: "iPhone 17", value: "iphone17", brand: "Apple" },

@@ -34,6 +34,7 @@ export async function getSessionUser() {
       id: user._id.toString(),
       name: user.name,
       email: user.email,
+      photoURL: user.photoURL || null,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };

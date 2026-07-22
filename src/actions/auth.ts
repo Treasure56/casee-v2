@@ -304,3 +304,40 @@ export async function logoutAction() {
   cookieStore.delete("session");
   redirect("/");
 }
+
+// ─── Google Sign-In ──────────────────────────────────────────────────────────
+
+export async function signInWithGoogleAction(idToken: string) {
+  const { getAdminAuth } = await import("@/lib/firebase-admin");
+
+  try {
+    // 1. Verify the Firebase ID token
+    const decodedToken = await getAdminAuth().verifyIdToken(idToken);
+
+    // 2. Upsert user in MongoDB — match by email to link existing accounts
+    await dbConnect();
+    const user = await User.findOneAndUpdate(
+      { email: decodedToken.email!.toLowerCase() },
+      {
+        $set: {
+          firebaseUid: decodedToken.uid,
+          photoURL: decodedToken.picture || undefined,
+          provider: "google",
+        },
+        $setOnInsert: {
+          name: decodedToken.name || decodedToken.email?.split("@")[0] || "User",
+          email: decodedToken.email!.toLowerCase(),
+        },
+      },
+      { upsert: true, new: true },
+    );
+
+    // 3. Create the same JWT session cookie used by email/password auth
+    await createSessionCookie(user._id.toString());
+  } catch (err) {
+    console.error("Google sign-in error:", err);
+    return { error: "Authentication failed. Please try again." };
+  }
+
+  redirect("/configure/design");
+}
