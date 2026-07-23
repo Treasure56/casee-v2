@@ -46,14 +46,14 @@ export default function DesignFeatures({
   const totalPrice = basePrice + selectedMaterial.price + selectedFinish.price;
 
   return (
-    <div className=" h-[37.5rem] w-full col-span-full lg:col-span-1 flex flex-col bg-card">
+    <div className="h-auto lg:h-[37.5rem] w-full col-span-1 flex flex-col bg-card rounded-lg border border-border">
       <ScrollArea className="relative flex-1 overflow-auto">
         <div
           aria-hidden="true"
           className=" absolute z-10 inset-x-0 bottom-0 h-12 bg-gradient-to-t from-card pointer-events-none"
         />
 
-        <div className=" px-8 pb-12 pt-8">
+        <div className="px-4 sm:px-8 pb-12 pt-8">
           <h2 className="tracking-tight font-bold text-3xl ">
             Customize your case
           </h2>
@@ -75,7 +75,9 @@ export default function DesignFeatures({
                       htmlFor={color.value}
                       className={cn(
                         "relative -m-0.5 mx-1 flex cursor-pointer items-center justify-center rounded-full p-0.5 active:ring-0 focus:ring-0 active:outline-none focus:outline-none border-2 border-separate border-transparent",
-                        selectedColor.value === color.value ? color.borderClass : ""
+                        selectedColor.value === color.value
+                          ? color.borderClass
+                          : "",
                       )}
                     >
                       <RadioGroupItem
@@ -209,8 +211,7 @@ export default function DesignFeatures({
                     ))}
                     <Label className="text-start">
                       {" "}
-                      Total price:{" "}
-                      {formatPrice(totalPrice)}
+                      Total price: {formatPrice(totalPrice)}
                     </Label>
                     <FormButton
                       onClick={onSave}

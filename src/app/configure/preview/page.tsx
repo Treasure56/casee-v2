@@ -83,7 +83,7 @@ export default async function Page({ searchParams }: PageProps) {
         </Link>
       </div>
 
-      <div className="grid grid-cols-12 gap-6 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
         <div className="flex flex-col md:col-span-4">
           <DesignedCase
             images={images}

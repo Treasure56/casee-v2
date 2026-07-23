@@ -25,13 +25,21 @@ export default function Step() {
           const isCompleted = step > index + 1;
           return (
             <div key={i.name} className="flex flex-col text-start">
-              <p className={cn(
-                "text-base font-semibold transition-colors",
-                isCurrent ? "text-brand-primary font-bold" : isCompleted ? "text-foreground" : "text-muted-foreground/60"
-              )}>
+              <p
+                className={cn(
+                  "text-base font-semibold transition-colors",
+                  isCurrent
+                    ? "text-brand-primary font-bold"
+                    : isCompleted
+                      ? "text-foreground"
+                      : "text-muted-foreground/60",
+                )}
+              >
                 {i.name}
               </p>
-              <p className="text-sm text-muted-foreground/80">{i.description}</p>
+              <p className="text-sm text-muted-foreground/80">
+                {i.description}
+              </p>
             </div>
           );
         })}

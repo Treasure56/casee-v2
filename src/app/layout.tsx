@@ -29,11 +29,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={`${outfit.variable} ${outfit.className} antialiased scroll-smooth bg-background text-foreground`}
+        className={`${outfit.variable} ${outfit.className} antialiased scroll-smooth bg-background text-foreground min-h-screen flex flex-col`}
       >
         <ThemeProvider>
           <Navbar />
-          {children}
+          <main className="flex-1 flex flex-col">{children}</main>
           <Footer />
         </ThemeProvider>
       </body>

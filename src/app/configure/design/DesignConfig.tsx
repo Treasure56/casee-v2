@@ -14,7 +14,10 @@ import {
 } from "react-icons/lu";
 import ImageToolbar from "./ImageToolbar";
 import Moveable from "react-moveable";
-import { useDesignStore, calculateInitialDimensions } from "@/store/useDesignStore";
+import {
+  useDesignStore,
+  calculateInitialDimensions,
+} from "@/store/useDesignStore";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -63,8 +66,6 @@ export default function DesignConfig() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploadingLayer, setIsUploadingLayer] = useState(false);
 
-
-
   // ── Long-press gesture handlers ──
 
   const startLongPress = (
@@ -109,10 +110,10 @@ export default function DesignConfig() {
 
   // ── Phone template config derived from model ──
 
-  let templateSrc = "/images/phone-template.png";
+  let templateSrc = "/images/phone-templates/iphone.png";
   let aspect = 896 / 1831;
-  let radiusClass = "rounded-[32px]";
-  let offsetClass = "left-[3px] top-px right-[3px] bottom-px";
+  let radiusClass = "rounded-[30px] sm:rounded-[34px] lg:rounded-[36px]";
+  let offsetStyle = { left: "0.8%", top: "0.1%", right: "0.8%", bottom: "0.1%" };
 
   if (
     model.value === "iphone16" ||
@@ -121,23 +122,26 @@ export default function DesignConfig() {
   ) {
     templateSrc = "/images/phone-templates/iphone16.png?v=999";
     aspect = 307 / 653;
-    radiusClass = "rounded-[32px]";
-    offsetClass = "left-[5px] top-[4px] right-[5px] bottom-[4px]";
-  } else if (model.value === "iphone17pro" || model.value === "iphone17promax") {
+    radiusClass = "rounded-[28px] sm:rounded-[32px] lg:rounded-[34px]";
+    offsetStyle = { left: "1.4%", top: "0.5%", right: "1.4%", bottom: "0.5%" };
+  } else if (
+    model.value === "iphone17pro" ||
+    model.value === "iphone17promax"
+  ) {
     templateSrc = "/images/phone-templates/iphone17pro.png?v=999";
     aspect = 896 / 1754;
-    radiusClass = "rounded-[36px]";
-    offsetClass = "left-[14px] top-[20px] right-[17px] bottom-[24px]";
+    radiusClass = "rounded-[30px] sm:rounded-[34px] lg:rounded-[36px]";
+    offsetStyle = { left: "5.3%", top: "3.9%", right: "6.5%", bottom: "4.7%" };
   } else if (model.brand === "Google") {
     templateSrc = "/images/phone-templates/pixel.png?v=999";
     aspect = 925 / 1700;
-    radiusClass = "rounded-[42px]";
-    offsetClass = "left-[26px] top-[14px] right-[29px] bottom-[25px]";
+    radiusClass = "rounded-[34px] sm:rounded-[38px] lg:rounded-[42px]";
+    offsetStyle = { left: "9.0%", top: "2.7%", right: "10.1%", bottom: "4.7%" };
   } else if (model.brand === "Samsung") {
     templateSrc = "/images/phone-templates/samsun_altra.png?v=999";
     aspect = 940 / 1672;
-    radiusClass = "rounded-[14px]";
-    offsetClass = "left-[29px] top-[20px] right-[31px] bottom-[16px]";
+    radiusClass = "rounded-[10px] sm:rounded-[12px] lg:rounded-[14px]";
+    offsetStyle = { left: "10.0%", top: "3.9%", right: "10.7%", bottom: "3.1%" };
   }
 
   // ── Upload handlers ──
@@ -179,14 +183,21 @@ export default function DesignConfig() {
           const finalWidth = data.width || width;
           const finalHeight = data.height || height;
 
-          const { renderedWidth, renderedHeight } = calculateInitialDimensions(finalWidth, finalHeight);
+          const { renderedWidth, renderedHeight } = calculateInitialDimensions(
+            finalWidth,
+            finalHeight,
+          );
           const newLayer: ImageLayer = {
             id: `layer-${Date.now()}`,
             url: data.imageUrl,
             width: finalWidth,
             height: finalHeight,
-            x: Math.max(10, Math.round((240 - renderedWidth) / 2)) + (images.length * 10) % 50,
-            y: Math.max(10, Math.round((490 - renderedHeight) / 2)) + (images.length * 10) % 50,
+            x:
+              Math.max(10, Math.round((240 - renderedWidth) / 2)) +
+              ((images.length * 10) % 50),
+            y:
+              Math.max(10, Math.round((490 - renderedHeight) / 2)) +
+              ((images.length * 10) % 50),
             renderedWidth,
             renderedHeight,
             rotation: 0,
@@ -227,14 +238,21 @@ export default function DesignConfig() {
       const width = data.width || 300;
       const height = data.height || 300;
 
-      const { renderedWidth, renderedHeight } = calculateInitialDimensions(width, height);
+      const { renderedWidth, renderedHeight } = calculateInitialDimensions(
+        width,
+        height,
+      );
       const newLayer: ImageLayer = {
         id: `layer-${Date.now()}`,
         url: data.imageUrl,
         width,
         height,
-        x: Math.max(10, Math.round((240 - renderedWidth) / 2)) + (images.length * 10) % 50,
-        y: Math.max(10, Math.round((490 - renderedHeight) / 2)) + (images.length * 10) % 50,
+        x:
+          Math.max(10, Math.round((240 - renderedWidth) / 2)) +
+          ((images.length * 10) % 50),
+        y:
+          Math.max(10, Math.round((490 - renderedHeight) / 2)) +
+          ((images.length * 10) % 50),
         renderedWidth,
         renderedHeight,
         rotation: 0,
@@ -316,7 +334,7 @@ export default function DesignConfig() {
         setTarget(null);
       }}
       className={cn(
-        "relative h-[45rem] overflow-hidden col-span-2 w-full max-w-4xl flex items-center justify-center rounded-lg border-2 border-dashed p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all duration-300",
+        "relative h-[28rem] sm:h-[36rem] lg:h-[45rem] overflow-hidden col-span-1 lg:col-span-2 w-full max-w-4xl flex items-center justify-center rounded-lg border-2 border-dashed p-4 sm:p-8 lg:p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all duration-300",
         isDragOverCanvas
           ? "border-brand-primary bg-brand-primary/10 scale-[1.01] shadow-lg shadow-brand-primary/5"
           : "border-border bg-muted/50",
@@ -375,14 +393,14 @@ export default function DesignConfig() {
       {/* Phone Case Canvas Overlay */}
       <div
         className={cn(
-          "relative bg-opacity-50 pointer-events-none",
+          "relative bg-opacity-50 pointer-events-none transition-all duration-300",
           model.value === "iphone17pro" || model.value === "iphone17promax"
-            ? "w-[16.4rem]"
+            ? "w-[12rem] sm:w-[14.5rem] lg:w-[16.4rem]"
             : model.brand === "Samsung"
-              ? "w-[18.1rem]"
+              ? "w-[13rem] sm:w-[15.5rem] lg:w-[18.1rem]"
               : model.brand === "Google"
-                ? "w-[18rem]"
-                : "w-60",
+                ? "w-[13rem] sm:w-[15.5rem] lg:w-[18rem]"
+                : "w-[11rem] sm:w-[14rem] lg:w-60",
         )}
         style={{ aspectRatio: aspect }}
       >
@@ -397,23 +415,14 @@ export default function DesignConfig() {
           />
         </AspectRatio>
 
-        {/* Clip mask */}
+        {/* Dynamic color background — clipped strictly inside the phone frame */}
         <div
           className={cn(
-            "absolute inset-0 z-[45] shadow-[0_0_0_99999px_rgba(250,250,250,1)] dark:shadow-[0_0_0_99999px_rgba(24,24,27,1)]",
-            offsetClass,
-            radiusClass,
-          )}
-        />
-
-        {/* Dynamic color background */}
-        <div
-          className={cn(
-            "absolute transition-colors duration-300",
-            offsetClass,
+            "absolute z-[10] overflow-hidden pointer-events-none transition-colors duration-300",
             radiusClass,
             color.bgClass,
           )}
+          style={offsetStyle}
         />
 
         {/* Render all Draggable and Resizable Image Layers */}

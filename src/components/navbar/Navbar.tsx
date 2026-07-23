@@ -11,7 +11,10 @@ export default async function Navbar() {
   return (
     <header className="h-16 w-full sticky top-0 bg-background/90 z-30 flex items-center app-container justify-between py-2 border-b border-border backdrop-blur-sm gap-4">
       <div className="flex gap-4 h-full items-center text-brand-primary">
-        <Link href={paths.home} className="text-2xl font-bold text-brand-primary">
+        <Link
+          href={paths.home}
+          className="text-2xl font-bold text-brand-primary"
+        >
           Ca<span className="text-brand-secondary">see</span>
         </Link>
       </div>
@@ -28,7 +31,10 @@ export default async function Navbar() {
                 </Link>
               )}
               <form action={logoutAction}>
-                <button type="submit" className="btn !px-2 text-destructive font-medium cursor-pointer">
+                <button
+                  type="submit"
+                  className="btn !px-2 text-destructive font-medium cursor-pointer"
+                >
                   Logout
                 </button>
               </form>
@@ -45,7 +51,10 @@ export default async function Navbar() {
           )}
         </div>
         <ThemeToggle />
-        <Link href={paths.design} className="btn btn-primary !px-6 !py-3 md:text-sm text-xs truncate ">
+        <Link
+          href={paths.design}
+          className="btn btn-primary !px-6 !py-3 md:text-sm text-xs truncate "
+        >
           Create Case <LuArrowUpRight />
         </Link>
       </nav>
